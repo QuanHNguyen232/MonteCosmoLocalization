@@ -5,7 +5,7 @@ import sys
 import time
 
 #Directory to save files to
-directory '.'
+directory = '.'
 
 
 #Function to rotate and collect images to be converted into raw data
