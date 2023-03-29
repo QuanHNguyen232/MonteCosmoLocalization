@@ -1,36 +1,46 @@
 import cozmo
 from cozmo.util import degrees
 import os
-import sys
-import time
+import cv2
+import numpy as np
+import imgprocessing as imgP
+from PIL import Image, ImageOps
 
-#Directory to save files to
-directory = '.'
+IMG_DIR = 'test-imgs'
 
+def show_img(img):
+    cv2.imshow("img", img)
+    cv2.waitKey()   # press any key to close
+    cv2.destroyAllWindows()
 
-#Function to rotate and collect images to be converted into raw data
-def cozmo_take_pictures(robot: cozmo.robot.Robot):
-    #Set head angle and lift height before photo collection
-    robot.set_head_angle(degrees(10.0)).wait_for_completed()
-    robot.set_lift_height(0.0).wait_for_completed()
-    #Make sure Cozmo is enabled to take pictures
-    robot.camera.image_image_stream_enabled = True
+def save_img(img: np.ndarray, filepath: str):
+    cv2.imwrite(filepath, img, [cv2.IMWRITE_JPEG_QUALITY, 100])
+
+def setup_robot(robot: cozmo.robot.Robot):
+    robot.set_lift_height(0).wait_for_completed()
+    robot.set_head_angle(degrees(15.0), in_parallel = True).wait_for_completed()
+
+def take_img(robot: cozmo.robot.Robot, num_pic=10, img_dir=IMG_DIR):
+    robot.camera.image_stream_enabled = True    # Enabling Cozmo Camera
+
+    setup_robot(robot)
     
-    #Create directory for pictures
-    if not os.path.exists('pictures'):
-        os.makedirs('pictures')
-    if not os.path.exists('pictures/'):
-        os.makedirs('pictures/')
+    currAngle = 0
+    rotateAngle = 360.0/num_pic
+    for i in range(num_pic):
+        img = robot.world.latest_image
+        annotated = img.annotate_image()
+        converted = annotated.convert()
+        
+        img = ImageOps.grayscale(converted)
+        img = np.array(img)
 
-    #Loop to get pictures
-    for i in range(20):
-        robot.add_event_handler(cozmo.world.EvtNewCameraImage, picture_taken) #When new image taken, save it
-        robot.turn_in_place(degrees(18).wait_for_completed())
-
-def picture_taken(robot: cozmo.robot.Robot):
-    pilImage = kwargs['image'].raw_image
-    name = "-%d.jpg" % kwargs['image'].image_number
-    pilImage.save(name, "JPEG")
-
-#At very end, make sure that Cozmo runs the program
-cozmo.run_program(cozmo_take_pictures)
+        save_img(img, os.path.join(img_dir, f'{i}-{currAngle}.jpg'))
+        
+        robot.turn_in_place(degrees(rotateAngle)).wait_for_completed()
+        currAngle += rotateAngle
+        
+    
+if __name__ =='__main__':
+    cozmo.run_program(take_img)
+    
