@@ -9,8 +9,15 @@ Environment: Python 3.8 + required packages in requirements.txt
 Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-tensorflow/blob/master/1-take-pictures/take-pictures.py) for taking pictures with cozmo and saving them.
 
 Computer Setup:
-1.	Install latest version of Python (python = 3.8)
+1.	Install latest version of Python 3.8
     * Recommend using Anaconda so that you can use multiple versions of Python at the same time, no need to install/reinstall
+       ```bash
+       conda create -n envname python=3.8
+       ```
+    * Install all required packages:
+       ```bash
+       pip install -r requirements.txt
+       ```
 1.	Install Anki Cozmo SDK
 1.	Enable/install Android Debug Bridge on Android device
 
