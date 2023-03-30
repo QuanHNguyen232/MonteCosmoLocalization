@@ -1,0 +1,5 @@
+cozmo[camera]
+numpy
+opencv-python
+matplotlib
+Pillow
