@@ -49,13 +49,13 @@ Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-te
 ---
 
 ## Tasks
-* [X] How to rotate robot
-* [X] How to get image from cozmo’s camera (file `picture-collection.py`)
 * [ ] Fix MCL code for images (check [Youtube](https://www.youtube.com/watch?v=JhkxtSn9eo8) and github) (file `my-MCL.py`)
 * [ ] Create a panorama (optional)
    * Check openCV Stitching (e.g from prev group: [L.Attai,R.Fuller,C.Rhodes](http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/Stitching.py))
 * [ ] Future:
    * How to improve accuracy
+* [X] How to rotate robot
+* [X] How to get image from cozmo’s camera (file `picture-collection.py`)
 
 ---
 
