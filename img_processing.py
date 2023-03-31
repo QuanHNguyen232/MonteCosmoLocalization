@@ -10,6 +10,9 @@ def get_img(filename):
     cv2_img = cv2.imread(filename, 0)    # gray scale --> 1 channel
     return np.array(cv2_img)
 
+def save_img(img: np.ndarray, filepath: str):
+    cv2.imwrite(filepath, img, [cv2.IMWRITE_JPEG_QUALITY, 100])
+
 def normalize_img(img):
     return np.array(img)/255.0
 

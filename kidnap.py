@@ -1,6 +1,6 @@
-import img_processing
+import img_processing as imgPr
 import my_MCL
-import pic_collection
+import pic_collection as picColl
 import random
 import cozmo
 from cozmo.util import degrees
@@ -11,11 +11,10 @@ import cv2
 
 def kidnap(robot: cozmo.robot.Robot):
     randomAngle = random.randint(30, 360)
-    robot.turn_in_place(degrees(randomAngle)).wait_for_completed()
+    robot.turn_in_place(degrees(randomAngle), speed=degrees(20)).wait_for_completed()
 
-
-# def save_img(img: np.ndarray, filepath: str):
-#     cv2.imwrite(filepath, img, [cv2.IMWRITE_JPEG_QUALITY, 100])
+def rotate_robot(robot: cozmo.robot.Robot, angle):
+    robot.turn_in_place(degrees(angle), speed=degrees(20)).wait_for_completed()
 
 def takeSingleImage(robot: cozmo.robot.Robot):
     robot.camera.image_stream_enabled = True    # Enabling Cozmo Camera
@@ -32,7 +31,7 @@ def takeSingleImage(robot: cozmo.robot.Robot):
         img = np.array(img)
 
         if not os.path.exists(IMG_DIR): os.makedirs(IMG_DIR)
-        pic_collection.save_img(img, os.path.join(IMG_DIR, kidnap_img))
+        imgPr.save_img(img, os.path.join(IMG_DIR, kidnap_img))
         print('IMG TAKEN')
     else:
         print('CANNOT TAKE IMG')
@@ -40,20 +39,28 @@ def takeSingleImage(robot: cozmo.robot.Robot):
 if __name__ == '__main__':
     IMG_DIR = 'cozmo-images-kidnap'
     kidnap_img = 'kidnapPhoto.jpg'
+    NUM_IMGS = 20
 
-    pic_collection.collect_img(20, img_dir=IMG_DIR)
+    picColl.collect_imgs(NUM_IMGS, img_dir=IMG_DIR)
     cozmo.run_program(kidnap)
     cozmo.run_program(takeSingleImage)
 
-    imgList = []
-    for img_name in os.listdir(IMG_DIR):
-        img = img_processing.get_img(f'{IMG_DIR}/{img_name}')
-        img = img_processing.normalize_img(img)
-        imgList.append(img)    
-
-    measure = img_processing.get_img(f'{IMG_DIR}/{kidnap_img}')
-    measure = img_processing.normalize_img(measure)
-    # prob = my_MCL.MCLocalize(all_particles = imgList, move_step = 30, measurement = measure)
-    # print(prob)
+    all_particles = []
+    for i in range(NUM_IMGS):
+        imgname = f'{IMG_DIR}/{i}-{i*(360.0/NUM_IMGS)}.jpg'
+        all_particles.append(imgPr.normalize_img(imgPr.get_img(imgname)))
+    
+    
+    n = len(all_particles)
+    prob = np.ones(n) / n
+    num_rotate = 3
+    for i in range(num_rotate):
+        img_name = f'{IMG_DIR}/currLoc.jpg'
+        picColl.collect_an_img(img_name)
+        measure = imgPr.normalize_img(imgPr.get_img(img_name))
+        prob = my_MCL.MCLocalize(prob, all_particles, 1, measure)
+        cozmo.run_program(lambda x : rotate_robot(x, angle=20))
+    
+    print([round(val, 3) for val in prob])
 
 
