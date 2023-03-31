@@ -3,10 +3,10 @@ from cozmo.util import degrees
 import os
 import cv2
 import numpy as np
-import imgprocessing as imgP
+import img_processing as imgP
 from PIL import Image, ImageOps
 
-IMG_DIR = 'test-imgs'
+IMG_DIR = 'cozmo-imgs'
 
 def show_img(img):
     cv2.imshow("img", img)
@@ -35,12 +35,15 @@ def take_img(robot: cozmo.robot.Robot, num_pic=10, img_dir=IMG_DIR):
         img = ImageOps.grayscale(converted)
         img = np.array(img)
 
+        if not os.path.exists(img_dir): os.makedirs(img_dir)
         save_img(img, os.path.join(img_dir, f'{i}-{currAngle}.jpg'))
         
         robot.turn_in_place(degrees(rotateAngle)).wait_for_completed()
         currAngle += rotateAngle
-        
+
+def collect_img(num_pic=20, img_dir='cozmo-imgs-2'):
+    cozmo.run_program(lambda x : take_img(x, num_pic=num_pic, img_dir=img_dir))
     
 if __name__ =='__main__':
-    cozmo.run_program(take_img)
+    cozmo.run_program(lambda x : take_img(x, num_pic=20, img_dir='cozmo-imgs-2'))
     

@@ -32,7 +32,7 @@ def move_update(currP: np.ndarray, move_step: int) -> np.ndarray:
 	newP = [currP[(i - move_step) % size] for i in range(size)]
 	return np.array(newP)
 
-def MCLocalize(all_particles: list, move_step: int, measurements: list) -> np.ndarray:
+def MCLocalize(all_particles: list, move_step: int, measurement) -> np.ndarray:
 	'''
 	Args:
 		all_particles: list of all data points from environment
@@ -44,9 +44,8 @@ def MCLocalize(all_particles: list, move_step: int, measurements: list) -> np.nd
 	n = len(all_particles)
 	prob = np.ones(n) / n
 
-	for i in range(len(measurements)):
-		prob = move_update(prob, move_step)
-		prob = sense_update(prob, measurements[i], all_particles)
+	prob = move_update(prob, move_step)
+	prob = sense_update(prob, measurement, all_particles)
 	
 	return prob
 	
