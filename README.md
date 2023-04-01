@@ -1,5 +1,6 @@
 # Anki Cozmo Kidnapping using Monte Carlo Localization
 
+Members: Nick, Quan, Doug, and Brayton
 
 Goal:
 * Implement MCL with Anki Cozmo
@@ -54,6 +55,8 @@ Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-te
    * Check openCV Stitching (e.g from prev group: [L.Attai,R.Fuller,C.Rhodes](http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/Stitching.py))
 * [ ] Future:
    * How to improve accuracy
+   * How to make it works in dark environment (may use edge detection??)
+   * How to localize with just 4 images (0, 90, 180, 270 degrees) (divide imgs into $n$ cols then compare w/ $n$ cols of each img for all $m$ ims?)
 * [X] How to rotate robot
 * [X] How to get image from cozmo’s camera (file `picture-collection.py`)
 
@@ -61,9 +64,11 @@ Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-te
 
 ## Working log
 | Data/Time | Activity | Member |
-|--------------|-----------|-----------|
+|:-|:-|-:|
 | 3/17: 1-2pm | Setup Project | Brayton & Nick |
 | 3/23: 4:15-5:15pm | Setup Project & Doc of steps | Doug & Nick |
 | 3/24: 1-5pm | Connect to Cozmo, implement basic MCL & pic collection | Doug, Quan & Nick |
 | 3/29: 2-5pm | MCL, refine code for pic collection | Doug, Quan & Nick |
 | 3/31: 2-4:45pm | Done take1Pic, kidnap | Doug, Quan & Nick |
+| 3/31: 5:15-6:30pm | Modify and fix bug in MCL | Quan |
+| 4/1: 1-1:50am | add MSE+Cos_Similar, try MCL, bad result --> suggest creating pano | Quan |

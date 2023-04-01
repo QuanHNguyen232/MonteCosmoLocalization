@@ -7,25 +7,36 @@ import random
 import numpy as np
 
 import img_processing as imgPr
+from img_processing import get_kernel, convolution
+
+def mse(data1: np.ndarray, data2: np.ndarray) -> np.ndarray:
+	size = data2.reshape(-1)[0]
+	res = np.power(data1 - data2, 2).sum()
+	return res/size
+
+def cos_similar(data1: np.ndarray, data2: np.ndarray) -> np.ndarray:
+	data1, data2 = data1.reshape(-1), data2.reshape(-1)
+	return np.dot(data1, data2) / (np.linalg.norm(data1) * np.linalg.norm(data2))
+
+def normalize_prob(prob: np.ndarray) -> np.ndarray:
+	return prob/np.sum(prob)
 
 def move_update(currP: np.ndarray, move_step: int) -> np.ndarray:
 	size = len(currP)
 	newP = [currP[(i - move_step) % size] for i in range(size)]
 	return np.array(newP)
 
-def sense_update(currP: np.ndarray, currData: np.ndarray, all_particles: list,) -> np.ndarray:
+def sense_update(currP: np.ndarray, data: np.ndarray, particles: list, method: str='mse') -> np.ndarray:
 	newP = np.zeros_like(currP)
-	size = currData.reshape(-1)[0]
-	for i in range(len(all_particles)):
-		diff = np.power(all_particles[i] - currData, 2).sum()
-		newP[i] = diff / size
-	newP = 1.0 - newP/np.sum(newP)	# for MSE, the lower the better --> 1 - lower = larger likelihood
-	newP = np.multiply(currP, newP/np.sum(newP))	# update based on old prob
-	return newP/np.sum(newP)	# normalize again
+	for i, ptc in enumerate(particles):
+		newP[i] = mse(ptc, data) if method == 'mse' else cos_similar(ptc, data)
+	if method == 'mse': newP = 1.0 - normalize_prob(newP)	# for MSE, the lower the better --> 1 - lower = larger likelihood
+	newP = normalize_prob(np.multiply(currP, newP))	# update based on old prob
+	return newP
 
-def MCLocalize(prob: np.ndarray, all_particles: list, move_step: int, measurement) -> np.ndarray:
+def MCLocalize(prob: np.ndarray, particles: list, move_step: int, measurement: np.ndarray, method: str='mse') -> np.ndarray:
 	prob = move_update(prob, move_step)
-	prob = sense_update(prob, measurement, all_particles)
+	prob = sense_update(prob, measurement, particles, method)
 	return prob
 
 def sense_update_old(currP: np.ndarray, Z, all_particles: list) -> np.ndarray:
@@ -59,28 +70,35 @@ if __name__ == '__main__':
 ##########################################################
 
 	IMG_DIR = 'cozmo-images-kidnap'
+	kernel_type = 'x'
+	img_process = lambda x : convolution(x, get_kernel(kernel_type), stride=1, pad=1)
 
 	all_particles = []
-	for i in range(20):
-		imgname = f'{IMG_DIR}/{i}-{i*18.0}.jpg'
-		all_particles.append(imgPr.normalize_img(imgPr.get_img(imgname)))
-	
+	num_imgs = 20
+	for i in range(num_imgs):
+		imgname = f'{IMG_DIR}/{i}-{i*(360.0/num_imgs)}.jpg'
+		img = imgPr.normalize_img(imgPr.get_img(imgname))
+		all_particles.append(img)
+	all_particles = [img_process(img) for img in all_particles]
+
 	print('num_imgs', len(all_particles))
 	print()
 
 	n = len(all_particles)
 	prob = np.ones(n) / n
 
-	num_rotate = 3
+	num_rotate = 1
 	random_loc = random.randint(1, len(all_particles) - num_rotate)
+	# random_loc = 0
 
 	for i in range(num_rotate):
-		random_imgname = f'{IMG_DIR}/{random_loc+i}-{(random_loc+i)*18.0}.jpg'
+		random_imgname = f'{IMG_DIR}/{random_loc+i}-{(random_loc+i)*(360.0/num_imgs)}.jpg'
+		# random_imgname = f'{IMG_DIR}/kidnapPhoto.jpg'
 		currData = imgPr.normalize_img(imgPr.get_img(random_imgname))
-		prob = MCLocalize(prob, all_particles, 1, currData)
+		prob = MCLocalize(prob, all_particles, 1, img_process(currData), 'mse')
 
-		# print([round(val, 3) for val in prob])
-		# print('actual loc', random_loc+i)
-		# print('predict loc', prob.argmax())
+		# print([round(val, 5) for val in prob])
+		print('actual loc', random_loc+i, end='\t')
+		print('predict loc', prob.argmax())
 		# print()
-	
+

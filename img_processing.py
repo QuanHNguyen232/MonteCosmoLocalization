@@ -14,7 +14,8 @@ def save_img(img: np.ndarray, filepath: str):
     cv2.imwrite(filepath, img, [cv2.IMWRITE_JPEG_QUALITY, 100])
 
 def normalize_img(img):
-    return np.array(img)/255.0
+    scale = 255.0 if img.max() > 200.0 else img.max()
+    return np.array(img)/scale
 
 def get_sobel(img, type_sobel='scharr'):
     ksize = -1 if type_sobel=='scharr' else 3
@@ -61,11 +62,13 @@ def pooling(img, pool_size=2, stride=2, pad=0, pool_type='max'):
 
 def get_kernel(kerel_type):
     if kerel_type == 'box_blur':
-        return np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9
+        return np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9.0
     elif kerel_type == 'canny_edge_detect':
         return np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]])
+    elif kerel_type == 'canny_edge_detect_2':
+        return np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
     elif kerel_type == 'gauss_blur':
-        return np.array([[1, 2, 1], [2, 4, 2], [1, 2, 1]]) / 16
+        return np.array([[1, 2, 1], [2, 4, 2], [1, 2, 1]]) / 16.0
     elif kerel_type == 'prewitt_vert':
         return np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]])
     elif kerel_type == 'prewitt_horiz':
@@ -80,21 +83,35 @@ def get_kernel(kerel_type):
         return np.array([[1, 0, 0], [0, 0, 0], [0, 0, -1]])
     elif kerel_type == 'sharpen':
         return np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
-    else: raise Exception('kernel_type unknown')
+    else:
+        return np.array([[0, 0, 0], [0, 1, 0], [0, 0, 0]])
 
 if __name__ == '__main__':
-    imgname = 'building-img.png'
+    DIR = 'cozmo-images-kidnap'
+
+    idx = 1
+    imgname = f'{DIR}/{idx}-{idx * 18.0}.jpg'
     cv2_img = get_img(imgname)
+    print(cv2_img.shape)
     show_img(normalize_img(cv2_img))
+    print(cv2_img.max())
 
     # cv2_sobel = get_sobel(cv2_img, 'scharr')
     # show_img(cv2_sobel)
-    
-    output = convolution(normalize_img(cv2_img), get_kernel('canny_edge_detect'), stride=1, pad=0)
+
+    output = convolution(normalize_img(cv2_img), get_kernel('x')*2, stride=1, pad=1)
     print(output.shape)
     show_img(output)
+    print(output.max())
 
-    output1 = pooling(output, pool_size=2, stride=2, pad=0, pool_type='max')
-    print(output1.shape)
-    show_img(output1)
+    output = convolution(normalize_img(output), get_kernel('canny_edge_detect'), stride=1, pad=1)
+    print(output.shape)
+    show_img(output)
+    print(output.max())
+
+    
+
+    # output1 = pooling(output, pool_size=2, stride=2, pad=0, pool_type='max')
+    # print(output1.shape)
+    # show_img(output1)
     
