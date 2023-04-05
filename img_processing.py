@@ -1,6 +1,17 @@
 import cv2
 import numpy as np
 
+#takes an image and crops top and bottom by arbitrary value,
+#then returns
+
+#Right now, takes an image and saves as "Cropped.jpg" -> find way to access original file name to modify it
+def crop_img(img):
+    crop_img = get_img(img)
+    upperHB =  np.size(crop_img, 0)-40 #upper height bound
+    upperWB = np.size(crop_img, 1)         #upper width bound
+    cropped_img = crop_img[40:upperHB, 0:upperWB] # Slicing to crop the image, first range is height, second is width
+    save_img(cropped_img, './cozmo-images-kidnap - Copy/Cropped.jpg')
+
 #to stitch images together in a panaorama
 def stitching():
     images = []
@@ -128,5 +139,9 @@ if __name__ == '__main__':
     
     #test image stiching
     # stitching()
-    img = get_img('./cozmo-images-kidnap/Panorama.jpeg')
-    show_img(img)
+    # img = get_img('./cozmo-images-kidnap/Panorama.jpeg')
+    # show_img(img)
+    
+    #test cropping
+    img = crop_img('cozmo-images-kidnap - Copy\Panorama.jpeg')
+    #show_img(img)
