@@ -92,13 +92,13 @@ if __name__ == '__main__':
 	# random_loc = 0
 
 	for i in range(num_rotate):
-		random_imgname = f'{IMG_DIR}/{random_loc+i}-{(random_loc+i)*(360.0/num_imgs)}.jpg'
-		# random_imgname = f'{IMG_DIR}/kidnapPhoto.jpg'
+		# random_imgname = f'{IMG_DIR}/{random_loc+i}-{(random_loc+i)*(360.0/num_imgs)}.jpg'
+		random_imgname = f'{IMG_DIR}/kidnapPhoto.jpg'
 		currData = imgPr.normalize_img(imgPr.get_img(random_imgname))
 		prob = MCLocalize(prob, all_particles, 1, img_process(currData), 'mse')
 
 		# print([round(val, 5) for val in prob])
-		print('actual loc', random_loc+i, end='\t')
+		if random_imgname==f'{IMG_DIR}/kidnapPhoto.jpg': print('actual loc 8 or 9', end='\t')
+		else: print('actual loc', random_loc+i, end='\t')
 		print('predict loc', prob.argmax())
-		# print()
 

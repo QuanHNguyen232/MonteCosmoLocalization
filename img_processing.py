@@ -1,6 +1,17 @@
 import cv2
 import numpy as np
 
+#to stitch images together in a panaorama
+def stitching():
+    images = []
+    for i in range(20): #our directory of images has 20 to stich togehter
+        images.append( #replace directory with your own 
+            cv2.imread(f'./cozmo-images-kidnap/{i}-{i*18.0}.jpg'))
+    stitcher = cv2.Stitcher.create()
+    ret, pano = stitcher.stitch(images)
+    print(pano.shape)
+    save_img(pano, './cozmo-images-kidnap/Panorama.jpeg')
+
 def show_img(img):
     cv2.imshow("img", img)
     cv2.waitKey()   # press any key to close
@@ -89,25 +100,25 @@ def get_kernel(kerel_type):
 if __name__ == '__main__':
     DIR = 'cozmo-images-kidnap'
 
-    idx = 1
-    imgname = f'{DIR}/{idx}-{idx * 18.0}.jpg'
-    cv2_img = get_img(imgname)
-    print(cv2_img.shape)
-    show_img(normalize_img(cv2_img))
-    print(cv2_img.max())
+    # idx = 1
+    # imgname = f'{DIR}/{idx}-{idx * 18.0}.jpg'
+    # cv2_img = get_img(imgname)
+    # print(cv2_img.shape)
+    # show_img(normalize_img(cv2_img))
+    # print(cv2_img.max())
 
     # cv2_sobel = get_sobel(cv2_img, 'scharr')
     # show_img(cv2_sobel)
 
-    output = convolution(normalize_img(cv2_img), get_kernel('x')*2, stride=1, pad=1)
-    print(output.shape)
-    show_img(output)
-    print(output.max())
+    # output = convolution(normalize_img(cv2_img), get_kernel('x')*2, stride=1, pad=1)
+    # print(output.shape)
+    # show_img(output)
+    # print(output.max())
 
-    output = convolution(normalize_img(output), get_kernel('canny_edge_detect'), stride=1, pad=1)
-    print(output.shape)
-    show_img(output)
-    print(output.max())
+    # output = convolution(normalize_img(output), get_kernel('canny_edge_detect'), stride=1, pad=1)
+    # print(output.shape)
+    # show_img(output)
+    # print(output.max())
 
     
 
@@ -115,3 +126,7 @@ if __name__ == '__main__':
     # print(output1.shape)
     # show_img(output1)
     
+    #test image stiching
+    # stitching()
+    img = get_img('./cozmo-images-kidnap/Panorama.jpeg')
+    show_img(img)

@@ -50,15 +50,19 @@ Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-te
 ---
 
 ## Tasks
-* [ ] Fix MCL code for images (check [Youtube](https://www.youtube.com/watch?v=JhkxtSn9eo8) and github) (file `my-MCL.py`)
-* [ ] Create a panorama (optional)
-   * Check openCV Stitching (e.g from prev group: [L.Attai,R.Fuller,C.Rhodes](http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/Stitching.py))
+* [ ] Change all read imgs to get 3D imgs (3 channels) -> modify convolution+pool functions (Quan)
+* [ ] Read MCL slides + Java demo code (convert to python) (Bray & Doug)
+* [ ] Crop pano img + sensor img in MCL algo (Nick)
+* [ ] Try running MCL w/ pano
 * [ ] Future:
    * How to improve accuracy
    * How to make it works in dark environment (may use edge detection??)
    * How to localize with just 4 images (0, 90, 180, 270 degrees) (divide imgs into $n$ cols then compare w/ $n$ cols of each img for all $m$ ims?)
 * [X] How to rotate robot
 * [X] How to get image from cozmo’s camera (file `picture-collection.py`)
+* [X] Fix MCL code for images (check [Youtube](https://www.youtube.com/watch?v=JhkxtSn9eo8) and github) (file `my-MCL.py`)
+* [X] Create a panorama (optional)
+   * Check openCV Stitching (e.g from prev group: [L.Attai,R.Fuller,C.Rhodes](http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/Stitching.py))
 
 ---
 
@@ -72,3 +76,4 @@ Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-te
 | 3/31: 2-4:45pm | Done take1Pic, kidnap | Doug, Quan & Nick |
 | 3/31: 5:15-6:30pm | Modify and fix bug in MCL | Quan |
 | 4/1: 1-1:50am | add MSE+Cos_Similar, try MCL, bad result --> suggest creating pano | Quan |
+| 4/5: 3:30-5pm  | image stiching for creation of pano | Quan & Nick |
