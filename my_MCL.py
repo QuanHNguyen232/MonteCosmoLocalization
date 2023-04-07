@@ -39,6 +39,7 @@ def MCLocalize(prob: np.ndarray, particles: list, move_step: int, measurement: n
 	prob = sense_update(prob, measurement, particles, method)
 	return prob
 
+#Old MCL ##################################
 def sense_update_old(currP: np.ndarray, Z, all_particles: list) -> np.ndarray:
 	newP = []
 	pHit, pMiss = 0.6, 0.2

@@ -1,16 +1,18 @@
 import cv2
 import numpy as np
+import os
 
-#takes an image and crops top and bottom by arbitrary value,
-#then returns
-
-#Right now, takes an image and saves as "Cropped.jpg" -> find way to access original file name to modify it
+#Takes an image and crops top and bottom by arbitrary value, then returns.
 def crop_img(img):
+    img_path = os.path.realpath(img) #get path of original img file
+    orig_name = os.path.basename(img_path) #get name of orig img file
+    
     crop_img = get_img(img)
     upperHB =  np.size(crop_img, 0)-40 #upper height bound
     upperWB = np.size(crop_img, 1)         #upper width bound
-    cropped_img = crop_img[40:upperHB, 0:upperWB] # Slicing to crop the image, first range is height, second is width
-    save_img(cropped_img, './cozmo-images-kidnap - Copy/Cropped.jpg')
+    cropped_img = crop_img[40:upperHB, 0:upperWB] # Slicing to crop the image, first range is height, second is width    
+    save_img(cropped_img, './cozmo-images-kidnap - Copy/c-' + orig_name)
+    return cropped_img
 
 #to stitch images together in a panaorama
 def stitching():
@@ -109,7 +111,7 @@ def get_kernel(kerel_type):
         return np.array([[0, 0, 0], [0, 1, 0], [0, 0, 0]])
 
 if __name__ == '__main__':
-    DIR = 'cozmo-images-kidnap'
+    DIR = 'cozmo-images-kidnap - Copy'
 
     # idx = 1
     # imgname = f'{DIR}/{idx}-{idx * 18.0}.jpg'
@@ -143,5 +145,5 @@ if __name__ == '__main__':
     # show_img(img)
     
     #test cropping
-    img = crop_img('cozmo-images-kidnap - Copy\Panorama.jpeg')
+    img = crop_img('cozmo-images-kidnap - Copy\kidnapPhoto.jpg')
     #show_img(img)
