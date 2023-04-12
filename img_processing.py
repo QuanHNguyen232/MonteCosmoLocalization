@@ -145,5 +145,5 @@ if __name__ == '__main__':
     # show_img(img)
     
     #test cropping
-    img = crop_img('cozmo-images-kidnap - Copy\kidnapPhoto.jpg')
+    #img = crop_img('cozmo-images-kidnap - Copy\kidnapPhoto.jpg')
     #show_img(img)

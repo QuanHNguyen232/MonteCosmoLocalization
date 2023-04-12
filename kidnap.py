@@ -60,7 +60,7 @@ def takeSingleImage(robot: cozmo.robot.Robot):
         print('CANNOT TAKE IMG')
 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
     
     # kidnap_img = 'kidnapPhoto.jpg'
     # NUM_IMGS = 20
@@ -87,8 +87,8 @@ if __name__ == '__main__':
     # print([round(val, 3) for val in prob])
     
 
-    #run the kidnapped robot problem
-    cozmo.run_program(kidnap_problem_solver)
+    #run the kidnapped robot problem###########################################
+    #cozmo.run_program(kidnap_problem_solver)
 
 
 

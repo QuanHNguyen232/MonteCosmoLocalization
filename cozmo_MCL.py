@@ -69,8 +69,8 @@ def MCL(robot: cozmo.robot.Robot):
     # # Storing pixel RGB values in a 3D array
     # cv_cozmo_image2 = np.array(cozmo_image2)
     
-    kidnap.takeSingleImage(robot)
-    cv_cozmo_image2 = imgPr.get_img("cozmo-images-kidnap - Copy\kidnapPhoto.jpg") #get kidnapPhoto
+    kidnap.takeSingleImage(robot) ##Uncomment me when done testing##################################
+    cv_cozmo_image2 = imgPr.get_img("cozmo-images-kidnap - Copy\kidnapPhoto.jpg") #get kidnapPhoto from prev method
     
 
     # empty arrays that hold population number, and weight
@@ -116,7 +116,7 @@ def MCL(robot: cozmo.robot.Robot):
 
    # redistribute population to newX
 
-     #Algorithm MCL line 8:
+   #Algorithm MCL line 8:
    #resampling
     for m in range(M):
         p = random.uniform(0, 1)
@@ -179,7 +179,7 @@ def compare_images(imageA, imageB):
   err /= (width * height * width * height)
   return err
 
-# Creates a slice of the panorama to compare to latestImage
+# Creates a slice of the panorama to compare to latestImage (kidnap photo)
 def slice(imgName, center, pixelLeft, pixelRight, slice_size):
   # slice an image into parts slice_size wide
   # initialize boundaries
@@ -260,5 +260,118 @@ def motionUpdate():
   #and where it is facing as a demonstration of localization
 
 if __name__ == '__main__':
-  robot = cozmo.robot.Robot
-  MCL(robot)
+  # robot = cozmo.robot.Robot
+  # MCL(robot)
+  
+  #Testing MCL - Remove later#################################
+  panoPixelArray = cv2.imread("cozmo-images-kidnap - Copy\Cropped.jpg") #image to read in, should read in our pano (the cropped one)
+  panoPixelArray.astype("float")                                        #Make sure to change other references to desired image as needed in this file
+  dimensions = panoPixelArray.shape
+  width = dimensions[1]
+  hieght = dimensions[0]
+  # Initialize cozmo camera
+  #robot.camera.image_stream_enabled = True
+  pixelWeights = [] # predictions
+
+  # Algorithm MCL Line 2
+  # fill array with uniform values as starting predictions at initialize
+  particles = []  # starts as randomized particles, aka guesses for where the robot is facing
+  M = 100   # Number of particles
+  i = 0     # Iterations
+  while i < M:
+      particles.append(random.randint(0, width))
+      i = i + 1
+  # Saves preliminary predictions to a dataframe
+  pointFrame = pd.DataFrame(particles, columns=['particles'])
+  
+  i = 0
+  while i < 1: # time steps is arbitrary
+    # NEED TO calculate random movement
+    # Rotate 10 degrees to right
+    
+    #########################
+    #IMPORTANT: We should replace image processing methods here with ones in 'img_processing.py' (if we have already)
+    #########################
+    
+    #robot.turn_in_place(degrees(-10.0)).wait_for_completed()
+    cv_cozmo_image2 = None
+
+    # latest_image = robot.world.latest_image
+    # while latest_image is None:
+    #   latest_image = robot.world.latest_image
+
+    # annotated = latest_image.annotate_image()
+    # if latest_image is not None:
+    #   converted = annotated.convert()
+    #   converted.save("latestImage", "JPEG", resolution=10)
+    
+    
+    # cozmo_image2 = latest_image.annotate_image(scale=None, fit_size=None, resample_mode=0)
+    # # Storing pixel RGB values in a 3D array
+    # cv_cozmo_image2 = np.array(cozmo_image2)
+    
+    #kidnap.takeSingleImage(robot) ##Uncomment me when done testing##################################
+    cv_cozmo_image2 = imgPr.get_img("cozmo-images-kidnap - Copy\kidnapPhoto.jpg") #get kidnapPhoto from prev method
+    if(cv_cozmo_image2 is None):
+      print("Numpy Array empty on line 314")
+
+    # empty arrays that hold population number, and weight
+    pixelPopulationNumber = []
+    pixelWeights = []
+
+    # empty that can hold new population, temp array list for the one above
+    newParticles = []
+
+    # Algorithm MCL Line 3
+    for pose in particles:
+      # Algorithm MCL Line 4
+      newPose = sample_motion_model(pose, width)
+      # Algorithm MCL line 5:
+      # map is [0, 1] interval space for movement, sensing distance from 0
+      weight = measurement_model(cv_cozmo_image2, newPose) 
+      
+      # Algorithm MCL line 6:
+      pixelWeights = np.append(pixelWeights,[weight])
+      pixelPopulationNumber = np.append(pixelPopulationNumber,[newPose])
+
+    # Compute probabilities (proportional to weights) and cumulative distribution function for sampling of next pose population
+    # NOTE: This is the heart of weighted resampling that is _not_ given in the text pseudocode.
+    # - first sum weights
+
+    # sum all weight, create new array size M, calculate probability
+    sum_weights = 0.0
+    for pixel in pixelWeights:
+      sum_weights += pixel
+    probabilities = []
+
+    for m in pixelWeights:
+      probabilities.append(m / sum_weights)
+
+    #Cumulative Distribution Function
+    cdf = []
+    sum_prob = 0
+
+    for prob in probabilities:
+        sum_prob += prob
+        cdf.append(sum_prob)
+    # cdf[len(probabilities)] = 1.0 last is always 1.0
+
+   # redistribute population to newX
+
+   #Algorithm MCL line 8:
+   #resampling
+    for m in range(M):
+        p = random.uniform(0, 1)
+        index = 0
+        while p >= cdf[index]:
+            index += 1
+        newParticles.append(pixelPopulationNumber[index])
+    particles = newParticles
+    i += 1
+  newParticles.sort()
+
+  # updating the CSV file with the original predictions and the newest predictions
+  df = pd.DataFrame(newParticles, columns = ['newParticles'])
+  df = df.join(pointFrame) # joins new predictions with original predictions
+  df = df.sort_values(by=['newParticles'], ascending=False)
+  df.to_csv("data/data.csv", index = False)
