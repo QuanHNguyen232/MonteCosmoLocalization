@@ -82,3 +82,4 @@ Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-te
 | 4/5: 3:30-5:30pm  | Image stiching for creation of pano | Quan & Nick |
 | 4/7: 1:20-3:30pm| Image cropping, MCL redo | Nick, Quan, Brayton |
 | 4/7: 3:30-4:30 pm| MCL redo | Nick, Quan |
+| 4/12: 2:20-4:50pm| Working on new MCL based on previous group efforts | Nick |
