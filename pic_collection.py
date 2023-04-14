@@ -6,6 +6,7 @@ import numpy as np
 import img_processing as imgPr
 from PIL import Image, ImageOps
 
+
 IMG_DIR = 'cozmo-imgs'
 
 
@@ -50,18 +51,21 @@ def take_imgs(robot: cozmo.robot.Robot, num_pic=15, img_dir=IMG_DIR):
             if not os.path.exists(img_dir): os.makedirs(img_dir)
             imgPr.save_img(img, os.path.join(img_dir, f'{i}-{currAngle}.jpg'))
             
-            robot.turn_in_place(degrees(rotateAngle), speed=degrees(20)).wait_for_completed()
+            robot.turn_in_place(degrees(rotateAngle), speed=degrees(45)).wait_for_completed()
             currAngle += rotateAngle
         else:
             get_in_position(robot)
             print('CANNOT TAKE IMG')
+    #stich panorama togehter from our images collected
+    imgPr.stitching()
 
-def collect_imgs(num_pic=20, img_dir='cozmo-imgs'):
+def collect_imgs(num_pic=20, img_dir='cozmo-images'):
     cozmo.run_program(lambda x : take_imgs(x, num_pic=num_pic, img_dir=img_dir))
 
 def collect_an_img(img_name):
     cozmo.run_program(lambda x : take_an_img(x, img_name=img_name))
 
 if __name__ == '__main__':
-    cozmo.run_program(lambda x : take_imgs(x, num_pic=20, img_dir='cozmo-imgs-2'))
+    cozmo.run_program(lambda x : take_imgs(x, num_pic=20, img_dir='cozmo-imgs-data4'))
+    
     

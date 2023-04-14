@@ -1,5 +1,5 @@
 import img_processing as imgPr
-import my_MCL
+import MCL_old
 import pic_collection as picColl
 import random
 import cozmo
@@ -11,29 +11,30 @@ import cv2
 import Histogram
 import cozmo_MCL
 
-#This class performs and attempts to solve the kidnapped robot problem.
-#(based on previous group's work)
 
 def kidnap_problem_solver(robot: cozmo.robot.Robot):
     # Spins the cozmo 360 degrees to get a panorama image of its current environment
-    picColl.collect_imgs(20, 'cozmo-imgs-testing')
+    picColl.take_imgs(robot, num_pic=20, img_dir='cozmo-images-kidnap')
+    # print('imgs collected')
     
     # Turn robot a random amount to simulate a kidnapping & snap picture at new location
     kidnap(robot)
-    takeSingleImage(robot)
+    # print('kidnap')
     
-    #Use MCL to find original position
+    takeSingleImage(robot)
+    # print('take 1 img')
+    
+    #Use MCL to find original position, takes images an tries to relocate
     cozmo_MCL.MCL(robot)
     
-    #Generate histogram to display cozmo's beliefs on location
-    Histogram.makeHistogram()
+    # Generate histogram to display cozmo's beliefs on location
+   # Histogram.makeHistogram()
 
 
-#Our work###############
 #"Kidnap" robot by rotating a random amount
 def kidnap(robot: cozmo.robot.Robot):
     randomAngle = random.randint(30, 360)
-    robot.turn_in_place(degrees(randomAngle), speed=degrees(20)).wait_for_completed()
+    robot.turn_in_place(degrees(randomAngle), speed=degrees(45)).wait_for_completed()
 
 def rotate_robot(robot: cozmo.robot.Robot, angle):
     robot.turn_in_place(degrees(angle), speed=degrees(20)).wait_for_completed()
@@ -60,35 +61,17 @@ def takeSingleImage(robot: cozmo.robot.Robot):
         print('CANNOT TAKE IMG')
 
 
-#if __name__ == '__main__':
-    
-    # kidnap_img = 'kidnapPhoto.jpg'
-    # NUM_IMGS = 20
-    #
-    # picColl.collect_imgs(NUM_IMGS, img_dir=IMG_DIR)
+if __name__ == '__main__':
+    #Test picture collection
+    # cozmo.run_program(lambda x : picColl.take_imgs(x, num_pic=20, img_dir='cozmo-imgs-data1'))
     # cozmo.run_program(kidnap)
     # cozmo.run_program(takeSingleImage)
-    #
-    # all_particles = []
-    # for i in range(NUM_IMGS):
-    #     imgname = f'{IMG_DIR}/{i}-{i*(360.0/NUM_IMGS)}.jpg'
-    #     all_particles.append(imgPr.normalize_img(imgPr.get_img(imgname)))
-    #
-    # n = len(all_particles)
-    # prob = np.ones(n) / n
-    # num_rotate = 3
-    # for i in range(num_rotate):
-    #     img_name = f'{IMG_DIR}/currLoc.jpg'
-    #     picColl.collect_an_img(img_name)
-    #     measure = imgPr.normalize_img(imgPr.get_img(img_name))
-    #     prob = my_MCL.MCLocalize(prob, all_particles, 1, measure)
-    #     cozmo.run_program(lambda x : rotate_robot(x, angle=20))
-    #
-    # print([round(val, 3) for val in prob])
+
     
 
-    #run the kidnapped robot problem###########################################
-    #cozmo.run_program(kidnap_problem_solver)
-
+    ############ Run the kidnapped robot problem###########################################
+    cozmo.run_program(kidnap_problem_solver)
+    # Generate histogram to display cozmo's beliefs on location
+    Histogram.makeHistogram()
 
 

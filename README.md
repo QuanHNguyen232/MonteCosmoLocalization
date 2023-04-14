@@ -50,9 +50,9 @@ Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-te
 ---
 
 ## Tasks
+* [ ] Get robot to turn to location it has highest belief prob after MCL done
 * [ ] Change all read imgs to get 3D imgs (3 channels) -> modify convolution+pool functions (Quan)
-* [ ] Recreate MCL as per supplied examples (based on [L.Attai,R.Fuller,C.Rhodes](http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/MCLocalize.py)))
-   * [ ] Polish borrowed code: make more succint, use methods we have already coded. 
+* [ ] Polish borrowed code: make more succint, use methods we have already coded.  
 * [ ] Read MCL slides + Java demo code (convert to python) (Bray & Doug)
 * [ ] Try running MCL w/ pano
 * [ ] Future:
@@ -65,6 +65,23 @@ Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-te
 * [X] Create a panorama (optional)
    * Check openCV Stitching (e.g from prev group: [L.Attai,R.Fuller,C.Rhodes](http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/Stitching.py))
 * [X] Crop pano img + sensor img in MCL algo (Nick)
+* [X] Recreate MCL as per supplied examples (based on [L.Attai,R.Fuller,C.Rhodes](http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/MCLocalize.py)))
+
+
+---
+Files and Dirs
+* data: data collected from MCL, used to create * Histogram: histogram of probs from MCL
+* cozmo_MCL.py: New MCL implementation, based on previous group's work
+* img_processing.py:
+   * get imgs func
+   * process imgs
+   * save imgs:
+* pic_collection.py:
+   * collection of pictures for pano
+   * taking of single image for MCL
+* MCL_old.py: old MCL (not true MCL -> not accurate)
+* cozmo-images-kidnap: images for kidnap problem (collected data)
+* cozmo-imgs-data1: data for remote work
 
 
 ---
@@ -83,4 +100,7 @@ Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-te
 | 4/7: 1:20-3:30pm| Image cropping, MCL redo | Nick, Quan, Brayton |
 | 4/7: 3:30-4:30 pm| MCL redo | Nick, Quan |
 | 4/12: 2:20-4:50pm| Working on new MCL based on previous group efforts | Nick |
-| 4/12: 7:00-| MCL debugging | Nick |
+| 4/12: 7:00-7:50pm| MCL debugging | Nick |
+| 4/14: 1:00-2:30PM| MCL testing/debugging | Brayton |
+| 4/14: 1:00-5:20PM| MCL testing/debugging | Nick |
+
