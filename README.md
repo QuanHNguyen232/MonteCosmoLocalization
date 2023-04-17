@@ -103,4 +103,6 @@ Files and Dirs
 | 4/12: 7:00-7:50pm| MCL debugging | Nick |
 | 4/14: 1:00-2:30PM| MCL testing/debugging | Brayton |
 | 4/14: 1:00-5:20PM| MCL testing/debugging | Nick |
+| 4/16: 9:20-10:00PM| Make Cozmo relocalize after MCL | Nick |
+| 4/16: 2:00-4:00PM | Make Cozmo relocalize after MCL | Nick | 
 

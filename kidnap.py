@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
     
 
-    ############ Run the kidnapped robot problem###########################################
+    ############ Run the kidnapped robot problem ###########################################
     cozmo.run_program(kidnap_problem_solver)
     # Generate histogram to display cozmo's beliefs on location
     Histogram.makeHistogram()

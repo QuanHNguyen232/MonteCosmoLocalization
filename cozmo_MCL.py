@@ -24,7 +24,7 @@ proportionalMotionVariance = 0.01
 
 def MCL(robot: cozmo.robot.Robot):
   panoPixelArray = cv2.imread("cozmo-images-kidnap\c-Panorama.jpg") #image to read in, should read in our pano (the cropped one)
-  panoPixelArray.astype("float")                                        #Make sure to change other references to desired image as needed in this file
+  panoPixelArray.astype("float")                                    #make sure to change other references to desired image as needed in this file
   dimensions = panoPixelArray.shape
   width = dimensions[1]
   hieght = dimensions[0]
@@ -46,11 +46,6 @@ def MCL(robot: cozmo.robot.Robot):
   i = 0
   while i < 10: # time steps is arbitrary
     # NEED TO calculate random movement
-    # Rotate 10 degrees to right
-    
-    #########################
-    #IMPORTANT: We should replace image processing methods here with ones in 'img_processing.py' (if we have already)
-    #########################
     
     robot.turn_in_place(degrees(18.0)).wait_for_completed() #collect 20 images for pano, so 18 degrees per turn
     cv_cozmo_image2 = None
@@ -64,12 +59,11 @@ def MCL(robot: cozmo.robot.Robot):
     #   converted = annotated.convert()
     #   converted.save("latestImage", "JPEG", resolution=10)
     
-    
     # cozmo_image2 = latest_image.annotate_image(scale=None, fit_size=None, resample_mode=0)
     # # Storing pixel RGB values in a 3D array
     # cv_cozmo_image2 = np.array(cozmo_image2)
     
-    kidnap.takeSingleImage(robot) ##Uncomment me when done testing##################################
+    kidnap.takeSingleImage(robot) 
     cv_cozmo_image2 = imgPr.get_img("cozmo-images-kidnap\kidnapPhoto.jpg") #get kidnapPhoto from prev method
     
 
@@ -134,6 +128,32 @@ def MCL(robot: cozmo.robot.Robot):
   df = df.sort_values(by=['newParticles'], ascending=False)
   df.to_csv("data/data.csv", index = False)
   
+  # Implement code to make Cozmo turn toward MCL's given highest belief probability:
+  # - How to find max probability (df with 'newParticles' or 'probabilities') -> SEEMS to be 'newParticles' from histogram
+  # - Break up prob distribution into respective points that refer to degrees out of 360
+  # - Mark beginning of pano as 'home' and uses this to find distance from believed location to 'home'
+  # - Turn that num of degrees to 'home'
+  
+  mostBelievedLoc = (df['newParticles'].mode()).max()   # get max of modes of 'newParticles', this is most frequent belief predication after MCL 
+                                                        # (where Cozmo thinks it is after MCL)
+  #get width of panorama, our 'map' of the environment
+  pano = cv2.imread("cozmo-images-kidnap\c-Panorama.jpg") # our cropped panorama
+  dimensions = pano.shape
+  width = dimensions[1]
+  
+  #break up map of environment into pieces, corresponding to degrees out of 360
+  widthToDegrees = width/360      # one degree out of 360 =  ___ of width
+  
+  degreesToLocalize = 0.94*(mostBelievedLoc/widthToDegrees)  #convert location of highest belief in map to degrees for Cozmo to turn
+                                                              #multiplied by small error percentage
+  #remove after done debugging
+  print(f"Most believed location: {mostBelievedLoc}") #is series want to be float or int
+  print(f"width to degrees: {widthToDegrees}")
+  print(f"degrees to localize: {degreesToLocalize}")  #is series want to be float or int
+
+  robot.turn_in_place(degrees(-degreesToLocalize))     #turn Cozmo accordingly (turn right to get Cozmo home -> MCL turns Cozmo left only to gather data)
+  
+   
   print("MCL Ran##############################################################")
 
 

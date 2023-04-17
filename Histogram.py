@@ -5,10 +5,7 @@ Credit belongs to http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/ful
 #!/usr/bin/python
 import cv2
 import pandas as pd
-import random
 import numpy as np
-import sys
-import math
 import matplotlib.pyplot as plt
 
 #############

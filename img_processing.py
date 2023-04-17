@@ -24,6 +24,7 @@ def stitching():
     ret, pano = stitcher.stitch(images)
     #print(pano.shape)
     save_img(pano, './cozmo-images-kidnap/Panorama.jpg')
+    #cv2.imwrite('Panorama.jpg', pano)
     #crop image
     crop_img('./cozmo-images-kidnap/Panorama.jpg')
 
@@ -112,7 +113,7 @@ def get_kernel(kerel_type):
     else:
         return np.array([[0, 0, 0], [0, 1, 0], [0, 0, 0]])
 
-# if __name__ == '__main__':
+#if __name__ == '__main__':
     #DIR = 'cozmo-images-kidnap - Copy'
 
     # idx = 1
