@@ -14,13 +14,14 @@ import cozmo_MCL
 
 def kidnap_problem_solver(robot: cozmo.robot.Robot):
     # Spins the cozmo 360 degrees to get a panorama image of its current environment
-    picColl.take_imgs(robot, num_pic=20, img_dir='cozmo-images-kidnap')
+    picColl.take_imgs(robot, num_pic=30, img_dir='cozmo-images-kidnap')
     # print('imgs collected')
     
     # Turn robot a random amount to simulate a kidnapping & snap picture at new location
     kidnap(robot)
     # print('kidnap')
     
+    #take image at kidnap location
     takeSingleImage(robot)
     # print('take 1 img')
     
@@ -28,7 +29,7 @@ def kidnap_problem_solver(robot: cozmo.robot.Robot):
     cozmo_MCL.MCL(robot)
     
     # Generate histogram to display cozmo's beliefs on location
-   # Histogram.makeHistogram()
+    #Histogram.makeHistogram() #No need, already called in MCL
 
 
 #"Kidnap" robot by rotating a random amount
@@ -57,6 +58,7 @@ def takeSingleImage(robot: cozmo.robot.Robot):
         if not os.path.exists(IMG_DIR): os.makedirs(IMG_DIR)
         imgPr.save_img(img, os.path.join(IMG_DIR, 'kidnapPhoto.jpg'))
         #print('IMG TAKEN')
+        imgPr.crop_img('cozmo-images-kidnap\kidnapPhoto.jpg')    #crop kidnap image for better compatiblitiy with pano
     else:
         print('CANNOT TAKE IMG')
 

@@ -1,5 +1,5 @@
 '''
-Credit belongs to http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/#code
+Modified work of: http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/#code
 '''
 
 #!/usr/bin/python
@@ -30,10 +30,19 @@ def makeHistogram():
   # the csv file when you run the code will be included in the final histogram with the new
   # data unless you clear it first. 
   plt.clf()
-  plt.hist(originalPredictions,range = [0,width], bins = width)
-  plt.hist(newestPredictions,range = [0,width], bins = width)
-  plt.title('Robot')
-  plt.xlabel('Width of Panorama')
-  plt.ylabel('Frequency of Predicitons')
-  plt.savefig("hist.png")
+  fig, ax = plt.subplots()
+  custom_bins = np.arange(0, width, 10) #create custom bins for histogram -> num predictions per range of 10
+  ax.hist(originalPredictions,range = [0,width], bins = custom_bins)
+  freq, bins, patches = ax.hist(newestPredictions,range = [0,width], bins = custom_bins) #newest belief predications
+  ax.set_title('Cozmo MCL Predictions')
+  ax.set_xlabel('Width of Panorama')
+  ax.set_ylabel('Frequency of Predicitons')
+  fig.savefig("hist.png")
+  
+  bin_max = np.where(freq == freq.max()) #returns an array, can be multiple maxs that are equal
+  max_belief = bin_max[0] #get index where max bin is located in array
+  max_belief = max_belief[0] * 10 #scale result up to be pixel location in pano
+  
+  return max_belief #return max_belief for use by MCL
+  #print(max_belief)
 #makeHistogram()

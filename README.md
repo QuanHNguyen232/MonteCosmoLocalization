@@ -104,5 +104,10 @@ Files and Dirs
 | 4/14: 1:00-2:30PM| MCL testing/debugging | Brayton |
 | 4/14: 1:00-5:20PM| MCL testing/debugging | Nick |
 | 4/16: 9:20-10:00PM| Make Cozmo relocalize after MCL | Nick |
-| 4/16: 2:00-4:00PM | Make Cozmo relocalize after MCL | Nick | 
+| 4/16: 2:00-4:30PM| Make Cozmo relocalize after MCL | Nick | 
+| 4/16: 2:00-4:30PM| Make Cozmo relocalize after MCL | Nick | 
+| 4/21: 1:00-2:30PM| Cozmo localization tuning, website with documentation | Nick, Doug, Brayton |
+| 4/21: 2:30-5PM| Cozmo localization tuning, bins for histogram | Nick |
+
+
 
