@@ -1,5 +1,5 @@
 '''
-Credit belongs to http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/#code
+Based on work of http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/#code
 '''
 
 #!/usr/bin/python
@@ -17,6 +17,7 @@ import math
 import statistics as stat
 import kidnap
 import img_processing as imgPr
+import Histogram
 
 # Arbitrary values, to model gaussian noise.
 sensorVariance = 0.01
@@ -24,7 +25,7 @@ proportionalMotionVariance = 0.01
 
 def MCL(robot: cozmo.robot.Robot):
   panoPixelArray = cv2.imread("cozmo-images-kidnap\c-Panorama.jpg") #image to read in, should read in our pano (the cropped one)
-  panoPixelArray.astype("float")                                        #Make sure to change other references to desired image as needed in this file
+  panoPixelArray.astype("float")                                    #make sure to change other references to desired image as needed in this file
   dimensions = panoPixelArray.shape
   width = dimensions[1]
   hieght = dimensions[0]
@@ -44,15 +45,9 @@ def MCL(robot: cozmo.robot.Robot):
   pointFrame = pd.DataFrame(particles, columns=['particles'])
   
   i = 0
-  while i < 10: # time steps is arbitrary
-    # NEED TO calculate random movement
-    # Rotate 10 degrees to right
-    
-    #########################
-    #IMPORTANT: We should replace image processing methods here with ones in 'img_processing.py' (if we have already)
-    #########################
-    
-    robot.turn_in_place(degrees(18.0)).wait_for_completed() #collect 20 images for pano, so 18 degrees per turn
+  TIME_STEPS = 10
+  while i < TIME_STEPS: # time steps is arbitrary    
+    robot.turn_in_place(degrees(12.0)).wait_for_completed() #collect 30 images for pano, so 18 degrees per turn
     cv_cozmo_image2 = None
 
     # latest_image = robot.world.latest_image
@@ -64,13 +59,12 @@ def MCL(robot: cozmo.robot.Robot):
     #   converted = annotated.convert()
     #   converted.save("latestImage", "JPEG", resolution=10)
     
-    
     # cozmo_image2 = latest_image.annotate_image(scale=None, fit_size=None, resample_mode=0)
     # # Storing pixel RGB values in a 3D array
     # cv_cozmo_image2 = np.array(cozmo_image2)
     
-    kidnap.takeSingleImage(robot) ##Uncomment me when done testing##################################
-    cv_cozmo_image2 = imgPr.get_img("cozmo-images-kidnap\kidnapPhoto.jpg") #get kidnapPhoto from prev method
+    kidnap.takeSingleImage(robot) 
+    cv_cozmo_image2 = imgPr.get_img("cozmo-images-kidnap\c-kidnapPhoto.jpg") #get cropped kidnapPhoto from prev method
     
 
     # empty arrays that hold population number, and weight
@@ -97,21 +91,20 @@ def MCL(robot: cozmo.robot.Robot):
     # - first sum weights
 
     # sum all weight, create new array size M, calculate probability
-    sum_weights = 0.0
-    for pixel in pixelWeights:
-      sum_weights += pixel
-    probabilities = []
-
-    for m in pixelWeights:
-      probabilities.append(m / sum_weights)
-
+    # sum_weights = 0.0
+    # for pixel in pixelWeights:
+    #   sum_weights += pixel
+    # probabilities = []
+    # for m in pixelWeights:
+    #   probabilities.append(m / sum_weights)
+    probabilities = pixelWeights / pixelWeights.sum() # have not checked yet
     #Cumulative Distribution Function
-    cdf = []
-    sum_prob = 0
-
-    for prob in probabilities:
-        sum_prob += prob
-        cdf.append(sum_prob)
+    # cdf = []
+    # sum_prob = 0
+    # for prob in probabilities:
+    #     sum_prob += prob
+    #     cdf.append(sum_prob)
+    cdf = np.sum(np.tril(probabilities), axis=1)  # have not checked yet
     # cdf[len(probabilities)] = 1.0 last is always 1.0
 
    # redistribute population to newX
@@ -134,6 +127,34 @@ def MCL(robot: cozmo.robot.Robot):
   df = df.sort_values(by=['newParticles'], ascending=False)
   df.to_csv("data/data.csv", index = False)
   
+  # Implement code to make Cozmo turn toward MCL's given highest belief probability:
+  # - How to find max probability -> 'newParticles'
+  # - Break up prob distribution into respective points that refer to degrees out of 360
+  # - Mark beginning of pano as 'home' and uses this to find distance from believed location to 'home'
+  # - Turn that num of degrees to 'home'
+  
+  #important: bin portions of data to find were most predictions are 'clumped,' then can take 
+  #this bin and set as most believed location
+  mostBelievedLoc = Histogram.makeHistogram()   # get max bin for 'newParticles' histogram, this is most frequent belief predication after MCL of a pixel range 10
+                                                # (where Cozmo thinks it is after MCL)
+  #get width of panorama, our 'map' of the environment
+  pano = cv2.imread("cozmo-images-kidnap\c-Panorama.jpg") # our cropped panorama
+  dimensions = pano.shape
+  width = dimensions[1]
+  
+  #break up map of environment into pieces, corresponding to degrees out of 360
+  widthToDegrees = width/360      # one degree out of 360 =  ___ of width
+  
+  degreesToLocalize = 0.95*(mostBelievedLoc/widthToDegrees)  #convert location of highest belief in map to degrees for Cozmo to turn
+                                                              #multiplied by small error percentage
+  #remove after done debugging
+  print(f"Most believed location: {mostBelievedLoc}") #is series want to be float or int
+  print(f"width to degrees: {widthToDegrees}")
+  print(f"degrees to localize: {degreesToLocalize}")  #is series want to be float or int
+
+  robot.turn_in_place(degrees(-degreesToLocalize))     #turn Cozmo accordingly (turn right to get Cozmo home -> MCL turns Cozmo left only to gather data)
+  
+   
   print("MCL Ran##############################################################")
 
 
@@ -185,7 +206,7 @@ def compare_images(imageA, imageB):
 def slice(imgName, center, pixelLeft, pixelRight, slice_size):
   # slice an image into parts slice_size wide
   # initialize boundaries
-  img = Image.open("cozmo-images-kidnap\c-Panorama.jpg")
+  img = imgName #Image.open("cozmo-images-kidnap\c-Panorama.jpg")
   width, height = img.size
   left = center - pixelLeft
   right = center + pixelRight
@@ -221,21 +242,20 @@ def slice(imgName, center, pixelLeft, pixelRight, slice_size):
     
     
     
-#CURRENTLY UNINCORPORATED###########################
 #Updates our data for when we move the cozmo to take a new picture to compare to the panorama
-def motionUpdate(): 
-  #reads in the panorama and the data
-  data = pd.read_csv("data/data.csv")
-  pano = cv2.imread("cozmo-images-kidnap\c-Panorama.jpg")
-  dimensions = pano.shape
-  width = dimensions[1]
+# def motionUpdate(): 
+#   #reads in the panorama and the data
+#   data = pd.read_csv("data/data.csv")
+#   pano = cv2.imread("cozmo-images-kidnap\c-Panorama.jpg")
+#   dimensions = pano.shape
+#   width = dimensions[1]
   
-  #gives a rough estimate of how many pixels to the right we are moving in the panorama image
-  toAdd = math.floor(width / 360)
-  data['X'] = data['X'].apply(lambda x: x + (5 * toAdd))
-  #data['X'] = data['X'] + (10 * toAdd)
-  data.loc[data.X > (width - 320), 'X'] = random.randint(1, width - 330)  
-  data.to_csv("data/data.csv", index = False)
+#   #gives a rough estimate of how many pixels to the right we are moving in the panorama image
+#   toAdd = math.floor(width / 360)
+#   data['X'] = data['X'].apply(lambda x: x + (5 * toAdd))
+#   #data['X'] = data['X'] + (10 * toAdd)
+#   data.loc[data.X > (width - 320), 'X'] = random.randint(1, width - 330)  
+#   data.to_csv("data/data.csv", index = False)
 
 
 # TO-DO
@@ -247,9 +267,6 @@ def motionUpdate():
   #MCL motion model
   #update poses when cozmo turns during monte carlo localization
   #need to update pixels by how many pixels 10 would move you
-
-  #Histogram
-  #not seeing density around spikes
 
   #slice
   #needs to wrap around if at one end or the other

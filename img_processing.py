@@ -11,7 +11,7 @@ def crop_img(img):
     upperHB =  np.size(crop_img, 0)-40 #upper height bound
     upperWB = np.size(crop_img, 1)         #upper width bound
     cropped_img = crop_img[40:upperHB, 0:upperWB] # Slicing to crop the image, first range is height, second is width    
-    save_img(cropped_img, './cozmo-images-kidnap/c-' + orig_name)
+    save_img(cropped_img, './cozmo-images-kidnap/c-' + orig_name) #FIX ME WHEN DONE
     return cropped_img
 
 #to stitch images together in a panaorama & crop it 
@@ -19,11 +19,12 @@ def stitching():
     images = []
     for i in range(20): #our directory of images has 20 to stich togehter
         images.append( #replace directory with your own 
-            cv2.imread(f'./cozmo-images-kidnap/{i}-{i*18.0}.jpg'))
+            cv2.imread(f'./cozmo-images-kidnap/{i}-{i*12.0}.jpg'))
     stitcher = cv2.Stitcher.create()
     ret, pano = stitcher.stitch(images)
     #print(pano.shape)
     save_img(pano, './cozmo-images-kidnap/Panorama.jpg')
+    #cv2.imwrite('Panorama.jpg', pano)
     #crop image
     crop_img('./cozmo-images-kidnap/Panorama.jpg')
 
@@ -112,7 +113,7 @@ def get_kernel(kerel_type):
     else:
         return np.array([[0, 0, 0], [0, 1, 0], [0, 0, 0]])
 
-# if __name__ == '__main__':
+#if __name__ == '__main__':
     #DIR = 'cozmo-images-kidnap - Copy'
 
     # idx = 1
