@@ -12,7 +12,6 @@ import cozmo
 from cozmo.util import degrees, distance_mm, speed_mmps
 import numpy as np
 from PIL import Image
-import sys
 import math 
 import statistics as stat
 import kidnap
@@ -50,23 +49,9 @@ def MCL(robot: cozmo.robot.Robot):
     robot.turn_in_place(degrees(12.0)).wait_for_completed() #collect 30 images for pano, so 18 degrees per turn
     cv_cozmo_image2 = None
 
-    # latest_image = robot.world.latest_image
-    # while latest_image is None:
-    #   latest_image = robot.world.latest_image
-
-    # annotated = latest_image.annotate_image()
-    # if latest_image is not None:
-    #   converted = annotated.convert()
-    #   converted.save("latestImage", "JPEG", resolution=10)
-    
-    # cozmo_image2 = latest_image.annotate_image(scale=None, fit_size=None, resample_mode=0)
-    # # Storing pixel RGB values in a 3D array
-    # cv_cozmo_image2 = np.array(cozmo_image2)
-    
     kidnap.takeSingleImage(robot) 
     cv_cozmo_image2 = imgPr.get_img("cozmo-images-kidnap\c-kidnapPhoto.jpg") #get cropped kidnapPhoto from prev method
     
-
     # empty arrays that hold population number, and weight
     pixelPopulationNumber = []
     pixelWeights = []
@@ -86,10 +71,14 @@ def MCL(robot: cozmo.robot.Robot):
       pixelWeights = np.append(pixelWeights,[weight])
       pixelPopulationNumber = np.append(pixelPopulationNumber,[newPose])
 
-    # Compute probabilities (proportional to weights) 
-    probabilities = pixelWeights / pixelWeights.sum()
-    # Compute Cumulative Distribution Function (CDF) for sampling of next pose population
-    cdf = np.sum(np.tril(probabilities), axis=1)  # cdf[-1] = 1.0 (last is always 1.0)
+    # Compute probabilities (proportional to weights) and cumulative distribution function for sampling of next pose population
+    # NOTE: This is the heart of weighted resampling that is _not_ given in the text pseudocode.
+    # - first sum weights
+
+    # sum all weight, create new array size M, calculate probability
+    probabilities = pixelWeights / pixelWeights.sum() 
+    #Cumulative Distribution Function
+    cdf = np.sum(np.tril(probabilities), axis=1) 
 
    # redistribute population to newX
 
@@ -225,34 +214,12 @@ def slice(imgName, center, pixelLeft, pixelRight, slice_size):
       count += 1
       cv2.imwrite("Sliced.jpg", cv_sliced)
       return sliced_image
-    
-    
-    
-#Updates our data for when we move the cozmo to take a new picture to compare to the panorama
-# def motionUpdate(): 
-#   #reads in the panorama and the data
-#   data = pd.read_csv("data/data.csv")
-#   pano = cv2.imread("cozmo-images-kidnap\c-Panorama.jpg")
-#   dimensions = pano.shape
-#   width = dimensions[1]
-  
-#   #gives a rough estimate of how many pixels to the right we are moving in the panorama image
-#   toAdd = math.floor(width / 360)
-#   data['X'] = data['X'].apply(lambda x: x + (5 * toAdd))
-#   #data['X'] = data['X'] + (10 * toAdd)
-#   data.loc[data.X > (width - 320), 'X'] = random.randint(1, width - 330)  
-#   data.to_csv("data/data.csv", index = False)
-
 
 # TO-DO
 
   #locate in panorama if it has gone a full 360
   #if pixels then knowing what is the point where things cycle around is important
   #subtract that number of pixels to wrap it around
-
-  #MCL motion model
-  #update poses when cozmo turns during monte carlo localization
-  #need to update pixels by how many pixels 10 would move you
 
   #slice
   #needs to wrap around if at one end or the other

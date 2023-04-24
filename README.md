@@ -5,6 +5,7 @@ Members: Nick, Quan, Doug, and Brayton
 Goal:
 * Implement MCL with Anki Cozmo
 * Create Panorama of collected images from which the Cozmo bot can use to find its position and relocate itself.
+* Create means of displaying belief probabilities.
 
 [Cozmo API](https://data.bit-bots.de/cozmo_sdk_doc/cozmosdk.anki.com/docs/api.html)
 
@@ -90,21 +91,39 @@ Following the [installation guide from Cozmo](http://cozmosdk.anki.com/docs/init
 ---
 ## Files and Dirs
 * `data/`: data directory collected from MCL, used to create histogram.
-* `cozmo-images-kidnap/`: images for kidnap problem (collected data)
+* `cozmo-images-kidnap/`: images for kidnap problem (collected data that is updated for each run)
 * `cozmo-imgs-data1/`: data for remote work
-* `Histogram.py`: histogram of probs from MCL
 * `cozmo_MCL.py`: New MCL implementation, based on previous group's work
-* `img_processing.py`:
-   * get imgs func
-   * process imgs
-   * save imgs
-* `pic_collection.py`:
-   * collection of pictures for pano
-   * taking of single image for MCL
+* `img_processing.py`: functiona to get imgs, process imgs, save imgs
+* `pic_collection.py`: functions to collect pictures for pano, taking a single image for MCL.
+* `Histogram.py`: Creation of Histogram to display localization beliefs before and after MCL
+* `kidnap.py`: Running of kidnapped robot problem, using MCL, image processing, and pic collection.
 * `MCL_old.py`: old MCL (not true MCL -> not accurate)
+* `requirements.txt`: has all required installs for use with our code and Cozmo
+* `hist.png`: histogram of collected belief probablities after MCL is ran
+* `Sliced.jpg`: picture file used during MCL to compare current location to pano
 
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
 
+---
+
+## Functionality
+Our Cozmo MCL was able to localize with reasonable accuracy in some environments (in case the Stitching works well). Locations with repeatative patterns or extreme amounts of light greatly reduced accuracy of the localization. 
+
+Our group was able to improve upon a past group's MCL and make it give Cozmo a command to turn to home accordingly toward from its most believed location. Our group also created a histogram with clustered probablities and implemented the highest belief into the MCL.
+
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
+
+---
+
+## Future Goals
+The stitching algorithm used in this project would sometimes struggle with environments with few landmarks or excess/lack of light, not stitching all images together (issue from OpenCV). This would create a panorama that was not a true 360 degree view. Future groups could attempt a different stitching algorithm or attempt to build a world map in a different way. 
+
+Future groups could also rework our MCL to where Cozmo does not stop localizing until a certain belief probability/number of predictions for a location is reached. Our current implementation only rotates 10 times to localize before committing to the final belief probabilities.
+
+Our group's localization also relied on a program to randomly determine a kidnap location and then would automatically run MCL to localize. Future groups could have Cozmo map it's environment, then be in a state where it tries localize if it believes it is not at 'home.'
+
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
 
 ---
 
@@ -132,7 +151,13 @@ Following the [installation guide from Cozmo](http://cozmosdk.anki.com/docs/init
 | 4/16: 2:00-4:30PM| Make Cozmo relocalize after MCL | Nick | 
 | 4/16: 2:00-4:30PM| Make Cozmo relocalize after MCL | Nick | 
 | 4/21: 1:00-2:30PM| Cozmo localization tuning, website with documentation | Nick, Doug, Brayton |
-| 4/21: 2:30-5PM| Cozmo localization tuning, bins for histogram | Nick |
+| 4/21: 2:30-5:40PM| Cozmo localization tuning, bins for histogram | Nick |
+| 4/21: 5:00-7:00PM| Modifying pic collection | Brayton |
+| 4/22: 8:00-9:00PM| Modified kidnap | Brayton |
+| 4/23: 7:00-10:00PM| Modified MCL to use new map system | Brayton |
+| 4/24: 9:30-10:30AM| Changing MCL and supplementary files | Brayton |
+| 4/24: 1:00-2:00PM| Documentation and archiving of work | Nick, Quan, Brayton |
+
 
 </details>
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
