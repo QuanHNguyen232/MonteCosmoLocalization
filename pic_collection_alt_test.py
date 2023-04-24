@@ -66,6 +66,6 @@ def collect_an_img(img_name):
     cozmo.run_program(lambda x : take_an_img(x, img_name=img_name))
 
 if __name__ == '__main__':
-    #cozmo.run_program(lambda x : take_imgs(x, num_pic=40, img_dir='cozmo-imgs-data_alt'))
+    cozmo.run_program(lambda x : take_imgs(x, num_pic=40, img_dir='cozmo-imgs-data_alt'))
     
     
