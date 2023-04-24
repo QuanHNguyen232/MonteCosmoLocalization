@@ -1,5 +1,4 @@
 import img_processing as imgPr
-import MCL_old
 import pic_collection as picColl
 import random
 import cozmo
@@ -27,10 +26,6 @@ def kidnap_problem_solver(robot: cozmo.robot.Robot):
     
     #Use MCL to find original position, takes images an tries to relocate
     cozmo_MCL.MCL(robot)
-    
-    # Generate histogram to display cozmo's beliefs on location
-    #Histogram.makeHistogram() #No need, already called in MCL
-
 
 #"Kidnap" robot by rotating a random amount
 def kidnap(robot: cozmo.robot.Robot):
