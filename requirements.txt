@@ -1,4 +1,5 @@
 cozmo[camera]
+pandas
 numpy
 opencv-python
 matplotlib

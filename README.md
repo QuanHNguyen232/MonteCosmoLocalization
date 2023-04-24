@@ -15,12 +15,28 @@ Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-te
 1. [Setup](#setup)
    1. [Computer](#computer-setup)
    1. [Android phone](#mobile-phone-android-setup)
-1. [Task](#tasks)
+1. [Tasks](#tasks)
+1. [Files and Dirs](#files-and-dirs)
 1. [Working log](#working-log)
 
 ---
 
 ## Setup
+
+Following the [installation guide from Cozmo](http://cozmosdk.anki.com/docs/initial.html):
+   1. [Initial setup](http://cozmosdk.anki.com/docs/initial.html):
+      * Encourage using anaconda/miniconda instead of directly installing Python 3.x.
+      * SDK Example Programs: download and extract to any directory
+   1. Installation:
+      * On phone:
+         * Install Official Cozmo app ([Android](https://play.google.com/store/apps/details?id=com.digitaldreamlabs.cozmo2&hl=en_US&gl=US)/[iOS](https://apps.apple.com/us/app/cozmo/id1154282030))
+      * On computer:
+         * Install [Android Debug Bridge](http://cozmosdk.anki.com/docs/adb.html#adb), follow that to [Final installation](http://cozmosdk.anki.com/docs/adb.html#final-install). The “Enable USB debugging” step may vary based on your phone, so check the [android instruction](https://developer.android.com/studio/debug/dev-options) if needed.
+   1. Installing Python:
+      * In Anaconda Powershell Prompt, create new environment for developing Cozmo bot using this command: “conda create -n envname python=3.8”
+      * Activate environment and install required libraries: “conda activate envname” then “pip install cozmo[camera].”
+   1. Final step: download the SDK Examples, open Cozmo app, connect with cozmo bot (ensure the robot does not fall off the desk) -> setting -> enable SDK. Then try running the examples.
+
 ### Computer Setup:
 1.	Install Anki Cozmo SDK
 1.	Enable/install Android Debug Bridge on Android device
@@ -40,12 +56,14 @@ Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-te
 
 ### Mobile Phone (Android) Setup:
 1.	Enable USB debugging on Android device
-1.	Install Official Cozmo app on phone
+1.	Install Official Cozmo app on phone ([Android](https://play.google.com/store/apps/details?id=com.digitaldreamlabs.cozmo2&hl=en_US&gl=US)/[iOS](https://apps.apple.com/us/app/cozmo/id1154282030))
 1.	Run USB cable from phone to computer
-1. Run `adb devices` on CommandPrompt on computer to check and authorize your phone
+1. Run `adb devices` on CommandPrompt on computer to check and authorize your phone. (unil it appears **device** instead of **unauthorized**)
 1.	Open Cozmo app and turn Cozmo bot on 
 1.	Connect to Cozmo bot’s wifi network.
 1.	Enable SDK on Cozmo app
+
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
 
 ---
 
@@ -67,26 +85,33 @@ Helpful [link](https://github.com/nheidloff/visual-recognition-for-cozmo-with-te
 * [X] Crop pano img + sensor img in MCL algo (Nick)
 * [X] Recreate MCL as per supplied examples (based on [L.Attai,R.Fuller,C.Rhodes](http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/MCLocalize.py)))
 
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
 
 ---
-Files and Dirs
-* data: data collected from MCL, used to create * Histogram: histogram of probs from MCL
-* cozmo_MCL.py: New MCL implementation, based on previous group's work
-* img_processing.py:
+## Files and Dirs
+* `data/`: data directory collected from MCL, used to create histogram.
+* `cozmo-images-kidnap/`: images for kidnap problem (collected data)
+* `cozmo-imgs-data1/`: data for remote work
+* `Histogram.py`: histogram of probs from MCL
+* `cozmo_MCL.py`: New MCL implementation, based on previous group's work
+* `img_processing.py`:
    * get imgs func
    * process imgs
-   * save imgs:
-* pic_collection.py:
+   * save imgs
+* `pic_collection.py`:
    * collection of pictures for pano
    * taking of single image for MCL
-* MCL_old.py: old MCL (not true MCL -> not accurate)
-* cozmo-images-kidnap: images for kidnap problem (collected data)
-* cozmo-imgs-data1: data for remote work
+* `MCL_old.py`: old MCL (not true MCL -> not accurate)
+
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
 
 
 ---
 
 ## Working log
+<details>
+<summary>Click to expand</summary>
+
 | Data/Time | Activity | Member |
 |:-|:-|-:|
 | 3/17: 1-2pm | Setup Project | Brayton & Nick |
@@ -109,5 +134,11 @@ Files and Dirs
 | 4/21: 1:00-2:30PM| Cozmo localization tuning, website with documentation | Nick, Doug, Brayton |
 | 4/21: 2:30-5PM| Cozmo localization tuning, bins for histogram | Nick |
 
+</details>
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
 
+---
 
+**Convert `md` to `html`**: use this [codebeautify.org](https://codebeautify.org/markdown-to-html) for conversion.
+
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>

@@ -86,26 +86,10 @@ def MCL(robot: cozmo.robot.Robot):
       pixelWeights = np.append(pixelWeights,[weight])
       pixelPopulationNumber = np.append(pixelPopulationNumber,[newPose])
 
-    # Compute probabilities (proportional to weights) and cumulative distribution function for sampling of next pose population
-    # NOTE: This is the heart of weighted resampling that is _not_ given in the text pseudocode.
-    # - first sum weights
-
-    # sum all weight, create new array size M, calculate probability
-    # sum_weights = 0.0
-    # for pixel in pixelWeights:
-    #   sum_weights += pixel
-    # probabilities = []
-    # for m in pixelWeights:
-    #   probabilities.append(m / sum_weights)
-    probabilities = pixelWeights / pixelWeights.sum() # have not checked yet
-    #Cumulative Distribution Function
-    # cdf = []
-    # sum_prob = 0
-    # for prob in probabilities:
-    #     sum_prob += prob
-    #     cdf.append(sum_prob)
-    cdf = np.sum(np.tril(probabilities), axis=1)  # have not checked yet
-    # cdf[len(probabilities)] = 1.0 last is always 1.0
+    # Compute probabilities (proportional to weights) 
+    probabilities = pixelWeights / pixelWeights.sum()
+    # Compute Cumulative Distribution Function (CDF) for sampling of next pose population
+    cdf = np.sum(np.tril(probabilities), axis=1)  # cdf[-1] = 1.0 (last is always 1.0)
 
    # redistribute population to newX
 
@@ -145,8 +129,10 @@ def MCL(robot: cozmo.robot.Robot):
   #break up map of environment into pieces, corresponding to degrees out of 360
   widthToDegrees = width/360      # one degree out of 360 =  ___ of width
   
-  degreesToLocalize = 0.95*(mostBelievedLoc/widthToDegrees)  #convert location of highest belief in map to degrees for Cozmo to turn
-                                                              #multiplied by small error percentage
+  # convert location of highest belief in map to degrees for Cozmo to turn
+  # multiplied by small error percentage 0.95
+  degreesToLocalize = 0.95*(mostBelievedLoc/widthToDegrees)
+
   #remove after done debugging
   print(f"Most believed location: {mostBelievedLoc}") #is series want to be float or int
   print(f"width to degrees: {widthToDegrees}")
@@ -282,17 +268,17 @@ def slice(imgName, center, pixelLeft, pixelRight, slice_size):
 
 
 
-# if __name__ == '__main__':
-#   # robot = cozmo.robot.Robot
-#   # MCL(robot)
+if __name__ == '__main__':
+  # robot = cozmo.robot.Robot
+  # MCL(robot)
   
-#   #Testing MCL - Remove later#################################
-#   panoPixelArray = cv2.imread("cozmo-images-kidnap - Copy\Cropped.jpg") #image to read in, should read in our pano (the cropped one)
-#   panoPixelArray.astype("float")                                        #Make sure to change other references to desired image as needed in this file
-#   dimensions = panoPixelArray.shape
-#   width = dimensions[1]
-#   hieght = dimensions[0]
-#   # Initialize cozmo camera
-#   #robot.camera.image_stream_enabled = True
-#   pixelWeights = [] # predictions
+  #Testing MCL - Remove later#################################
+  panoPixelArray = cv2.imread("cozmo-images-kidnap - Copy\Cropped.jpg") #image to read in, should read in our pano (the cropped one)
+  panoPixelArray.astype("float")                                        #Make sure to change other references to desired image as needed in this file
+  dimensions = panoPixelArray.shape
+  width = dimensions[1]
+  hieght = dimensions[0]
+  # Initialize cozmo camera
+  #robot.camera.image_stream_enabled = True
+  pixelWeights = [] # predictions
 
