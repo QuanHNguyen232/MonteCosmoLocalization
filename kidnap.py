@@ -7,7 +7,7 @@ import os
 import numpy as np
 from PIL import Image, ImageOps
 import cv2
-import Histogram
+import histogram
 import cozmo_MCL
 
 
@@ -69,6 +69,6 @@ if __name__ == '__main__':
     ############ Run the kidnapped robot problem ###########################################
     cozmo.run_program(kidnap_problem_solver)
     # Generate histogram to display cozmo's beliefs on location
-    Histogram.makeHistogram()
+    histogram.makeHistogram()
 
 
