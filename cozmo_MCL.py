@@ -50,7 +50,7 @@ def MCL(robot: cozmo.robot.Robot):
     cv_cozmo_image2 = None
 
     kidnap.takeSingleImage(robot) 
-    cv_cozmo_image2 = imgPr.get_img("cozmo-images-kidnap\c-kidnapPhoto.jpg") #get cropped kidnapPhoto from prev method
+    cv_cozmo_image2 = imgPr.get_img_gray("cozmo-images-kidnap\c-kidnapPhoto.jpg") #get cropped kidnapPhoto from prev method
     
     # empty arrays that hold population number, and weight
     pixelPopulationNumber = []

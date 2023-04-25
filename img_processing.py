@@ -1,13 +1,14 @@
 import cv2
 import numpy as np
 import os
+from PIL import Image
 
 #Takes an image and crops top and bottom by arbitrary value, then returns.
-def crop_img(img):
-    img_path = os.path.realpath(img) #get path of original img file
+def crop_img(imgname: str) -> np.ndarray:
+    img_path = os.path.realpath(imgname) #get path of original img file
     orig_name = os.path.basename(img_path) #get name of orig img file
     
-    crop_img = get_img(img)
+    crop_img = get_img_gray(imgname)
     upperHB =  np.size(crop_img, 0)-40 #upper height bound
     upperWB = np.size(crop_img, 1)         #upper width bound
     cropped_img = crop_img[40:upperHB, 0:upperWB] # Slicing to crop the image, first range is height, second is width    
@@ -28,23 +29,38 @@ def stitching():
     #crop image
     crop_img('./cozmo-images-kidnap/Panorama.jpg')
 
-def show_img(img):
-    cv2.imshow("img", img)
-    cv2.waitKey()   # press any key to close
-    cv2.destroyAllWindows()
+def show_img(img: np.ndarray) -> None:
+    if len(img.shape)==2:   # gray img (h, w)
+        img = np.stack([img, img, img], axis=-1)
+    pil_img = img_np2PIL(img)
+    pil_img.show()
 
-def get_img(filename):
-    cv2_img = cv2.imread(filename, 0)    # gray scale --> 1 channel
-    return np.array(cv2_img)
+def get_img_gray(filename: str) -> np.ndarray:
+    img = cv2.imread(filename, 0)    # gray scale --> 1 channel
+    return img
 
-def save_img(img: np.ndarray, filepath: str):
-    cv2.imwrite(filepath, img, [cv2.IMWRITE_JPEG_QUALITY, 100])
+def get_img_rgb(filename: str) -> np.ndarray:
+    img = cv2.imread(filename)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    return img
 
-def normalize_img(img):
+def save_img(img: np.ndarray, filepath: str) -> None:
+    img = img_np2PIL(img)
+    img.save(filepath)
+    # cv2.imwrite(filepath, img, [cv2.IMWRITE_JPEG_QUALITY, 100])
+
+def normalize_img(img: np.ndarray) -> np.ndarray:
     scale = 255.0 if img.max() > 200.0 else img.max()
     return np.array(img)/scale
 
-def get_sobel(img, type_sobel='scharr'):
+def img_np2PIL(img: np.ndarray) -> Image:
+    if (img.max()>1):
+        pil_img = Image.fromarray(img, 'RGB')
+    else:
+        pil_img = Image.fromarray(np.uint8(img*255.0), 'RGB')
+    return pil_img
+
+def get_sobel(img: np.ndarray, type_sobel='scharr') -> np.ndarray:
     ksize = -1 if type_sobel=='scharr' else 3
     cv2_sobel_x = cv2.Sobel(img, ddepth=cv2.CV_32F, dx=1, dy=0, ksize=ksize)
     cv2_sobel_y = cv2.Sobel(img, ddepth=cv2.CV_32F, dx=0, dy=1, ksize=ksize)
@@ -52,7 +68,7 @@ def get_sobel(img, type_sobel='scharr'):
     cv2_sobel = cv2.addWeighted(cv2_sobel_x, 0.5, cv2_sobel_y, 0.5, 0)
     return cv2_sobel
 
-def convolution(img, kernel, stride=1, pad=0):
+def convolution(img: np.ndarray, kernel: np.ndarray, stride: int=1, pad: int=0) -> np.ndarray:
     i_h, i_w = img.shape
     k_h, k_w = kernel.shape
     out_size = (int((i_h - k_h + 2*pad)/stride + 1), int((i_w - k_w + 2*pad)/stride + 1))
@@ -68,7 +84,7 @@ def convolution(img, kernel, stride=1, pad=0):
             out_img[int(r/stride), int(c/stride)] = np.multiply(sub_img, kernel).sum()
     return out_img
 
-def pooling(img, pool_size=2, stride=2, pad=0, pool_type='max'):
+def pooling(img: np.ndarray, pool_size: int=2, stride: int=2, pad: int=0, pool_type: str='max') -> np.ndarray:
     i_h, i_w = img.shape
     out_size = (int((i_h - pool_size + 2*pad)/stride + 1), int((i_w - pool_size + 2*pad)/stride + 1))
     out_img = np.zeros(out_size)
@@ -87,7 +103,7 @@ def pooling(img, pool_size=2, stride=2, pad=0, pool_type='max'):
                 out_img[int(r/stride), int(c/stride)] = sub_img.max()
     return out_img
 
-def get_kernel(kerel_type):
+def get_kernel(kerel_type: str) -> np.ndarray:
     if kerel_type == 'box_blur':
         return np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9.0
     elif kerel_type == 'canny_edge_detect':

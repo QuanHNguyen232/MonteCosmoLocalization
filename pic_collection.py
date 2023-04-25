@@ -14,7 +14,7 @@ def get_in_position(robot: cozmo.robot.Robot):
     robot.set_lift_height(0).wait_for_completed()
     robot.set_head_angle(degrees(15.0), in_parallel = True).wait_for_completed()
 
-def take_an_img(robot: cozmo.robot.Robot, img_name):
+def take_an_img(robot: cozmo.robot.Robot, img_path: str):
     robot.camera.image_stream_enabled = True    # Enabling Cozmo Camera
 
     get_in_position(robot)
@@ -27,15 +27,16 @@ def take_an_img(robot: cozmo.robot.Robot, img_name):
         img = ImageOps.grayscale(converted)
         img = np.array(img)
 
-        imgPr.save_img(img, img_name)
+        imgPr.save_img(img, img_path)
         print('IMG TAKEN')
     else:
         print('CANNOT TAKE IMG')
 
-def take_imgs(robot: cozmo.robot.Robot, num_pic=15, img_dir=IMG_DIR):
+def take_imgs(robot: cozmo.robot.Robot, num_pic=15, img_dir=IMG_DIR, is_stitch=True):
     robot.camera.image_stream_enabled = True    # Enabling Cozmo Camera
 
     get_in_position(robot)
+    if not os.path.exists(img_dir): os.makedirs(img_dir)
     
     currAngle = 0.0
     rotateAngle = 360.0/num_pic
@@ -48,7 +49,6 @@ def take_imgs(robot: cozmo.robot.Robot, num_pic=15, img_dir=IMG_DIR):
             img = ImageOps.grayscale(converted)
             img = np.array(img)
 
-            if not os.path.exists(img_dir): os.makedirs(img_dir)
             imgPr.save_img(img, os.path.join(img_dir, f'{i}-{currAngle}.jpg'))
             
             robot.turn_in_place(degrees(rotateAngle), speed=degrees(45)).wait_for_completed()
@@ -57,15 +57,13 @@ def take_imgs(robot: cozmo.robot.Robot, num_pic=15, img_dir=IMG_DIR):
             get_in_position(robot)
             print('CANNOT TAKE IMG')
     #stich panorama togehter from our images collected
-    imgPr.stitching()
+    if is_stitch: imgPr.stitching()
 
-def collect_imgs(num_pic=20, img_dir='cozmo-images'):
-    cozmo.run_program(lambda x : take_imgs(x, num_pic=num_pic, img_dir=img_dir))
+def collect_imgs(num_pic: int=20, img_dir: str='./cozmo-images'):
+    cozmo.run_program(lambda x : take_imgs(x, num_pic, img_dir, False))
 
-def collect_an_img(img_name):
-    cozmo.run_program(lambda x : take_an_img(x, img_name=img_name))
+def collect_an_img(img_name: str):
+    cozmo.run_program(lambda x : take_an_img(x, img_name))
 
 if __name__ == '__main__':
-    cozmo.run_program(lambda x : take_imgs(x, num_pic=20, img_dir='cozmo-imgs-data4'))
-    
-    
+    collect_imgs()
