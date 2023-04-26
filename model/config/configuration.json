@@ -1,12 +1,16 @@
 {
-    "batch_size": 32,
-    "epoch": 5,
-    "dataset_len": 3200,
-    "encoder_embedding_size": 300,
-    "decoder_embedding_size": 300,
-    "hidden_size": 256,
-    "num_layers": 1,
-    "enc_dropout": 0.5,
-    "dec_dropout": 0.5,
-    "learning_rate": 0.001
+  "data_dir": "/Accounts/turing/students/s24/nguyqu03/Desktop/MonteCosmoLocalization/model/data",
+  "split-point": 15,
+  "img_size": 240,
+  "emb_size": 512,
+  "batch_size": 32,
+  "epochs": 5,
+  "dataset_len": 3200,
+  "encoder_embedding_size": 300,
+  "decoder_embedding_size": 300,
+  "hidden_size": 256,
+  "num_layers": 1,
+  "enc_dropout": 0.5,
+  "dec_dropout": 0.5,
+  "LR": 0.001
   }

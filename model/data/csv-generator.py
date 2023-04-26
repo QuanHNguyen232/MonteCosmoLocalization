@@ -18,6 +18,7 @@ def generate_csv(datadir: str) -> None:
         for img in img_id_list:
             data['sample_id'].append(dir)
             data['image_id'].append(img)
+            data['sample_size'].append(len(img_id_list))
     df = pd.DataFrame(data=data)
     df.to_csv(os.path.join(datadir, 'metadata.csv'))
 

@@ -169,24 +169,27 @@ Our group's localization also relied on a program to randomly determine a kidnap
 | 3/31: 2-4:45pm | Done take1Pic, kidnap | Doug, Quan & Nick |
 | 3/31: 5:15-6:30pm | Modify and fix bug in MCL | Quan |
 | 4/1: 1-1:50am | Add MSE+Cos_Similar, try MCL, bad result --> suggest creating pano | Quan |
-| 4/5: 3:30-5:30pm  | Image stiching for creation of pano | Quan & Nick |
-| 4/7: 1:20-3:30pm| Image cropping, MCL redo | Nick, Quan, Brayton |
-| 4/7: 3:30-4:30 pm| MCL redo | Nick, Quan |
-| 4/12: 2:20-4:50pm| Working on new MCL based on previous group efforts | Nick |
-| 4/12: 7:00-7:50pm| MCL debugging | Nick |
-| 4/14: 1:00-2:30PM| MCL testing/debugging | Brayton |
-| 4/14: 1:00-5:20PM| MCL testing/debugging | Nick |
-| 4/16: 9:20-10:00PM| Make Cozmo relocalize after MCL | Nick |
-| 4/16: 2:00-4:30PM| Make Cozmo relocalize after MCL | Nick | 
-| 4/16: 2:00-4:30PM| Make Cozmo relocalize after MCL | Nick | 
-| 4/21: 1:00-2:30PM| Cozmo localization tuning, website with documentation | Nick, Doug, Brayton |
-| 4/21: 2:30-5:40PM| Cozmo localization tuning, bins for histogram | Nick |
-| 4/21: 5:00-7:00PM| Modifying pic collection | Brayton |
-| 4/22: 8:00-9:00PM| Modified kidnap | Brayton |
-| 4/23: 7:00-10:00PM| Modified MCL to use new map system | Brayton |
-| 4/24: 9:30-10:30AM| Changing MCL and supplementary files | Brayton |
-| 4/24: 1:00-2:00PM| Documentation and archiving of work | Nick, Quan, Brayton |
-| 4/25: 5:15-8:30PM| Clean code, add html-generator, create dataset (1440 imgs)| Quan |
+| 4/5: 3:30-5:30pm | Image stiching for creation of pano | Quan & Nick |
+| 4/7: 1:20-3:30pm | Image cropping, MCL redo | Nick, Quan, Brayton |
+| 4/7: 3:30-4:30 pm | MCL redo | Nick, Quan |
+| 4/12: 2:20-4:50pm | Working on new MCL based on previous group efforts | Nick |
+| 4/12: 7:00-7:50pm | MCL debugging | Nick |
+| 4/14: 1:00-2:30PM | MCL testing/debugging | Brayton |
+| 4/14: 1:00-5:20PM | MCL testing/debugging | Nick |
+| 4/16: 9:20-10:00PM | Make Cozmo relocalize after MCL | Nick |
+| 4/16: 2:00-4:30PM | Make Cozmo relocalize after MCL | Nick | 
+| 4/21: 1:00-2:30PM | Cozmo localization tuning, website with documentation | Nick, Doug, Brayton |
+| 4/21: 2:30-5:40PM | Cozmo localization tuning, bins for histogram | Nick |
+| 4/21: 5:00-7:00PM | Modifying pic collection | Brayton |
+| 4/22: 8:00-9:00PM | Modified kidnap | Brayton |
+| 4/23: 7:00-10:00PM | Modified MCL to use new map system | Brayton |
+| 4/24: 9:30-10:30AM | Changing MCL and supplementary files | Brayton |
+| 4/24: 1:00-2:00PM | Documentation and archiving of work | Nick, Quan, Brayton |
+| 4/24: 10:00-12:00PM | Write website framework, outline, review final code | Doug |
+| 4/25: 5:15-8:30PM | Clean code, add html-generator, create dataset (1440 imgs) | Quan |
+| 4/26: 10:00-3:00AM | Populate website, write copy, finalize website objects and sections | Doug |
+| 4/26: 11:00-12:15PM | Add baseline to train siamese network | Quan |
+| 4/26: 1:30-3:30 | Add training loop | Quan |
 
 </details>
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
