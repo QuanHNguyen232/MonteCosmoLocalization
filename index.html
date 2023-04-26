@@ -1,5 +1,23 @@
-<h1 id="anki-cozmo-kidnapping-using-monte-carlo-localization">Anki Cozmo Kidnapping using Monte Carlo Localization</h1>
-<p>Members: Nick, Quan, Douglas, and Brayton</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS 371 MCL CozmoBot</title>
+</head>
+<body><h1 align=center>Anki Cozmo Kidnapping using Monte Carlo Localization</h1>
+
+<p align="center">
+Nicholas Stach, Quan Nguyen, Brayton Alkinburgh, Douglas Harsha
+<br>
+<i>Spring 2023</i>
+<br>
+<a href="https://github.com/QuanHNguyen232/MonteCosmoLocalization" target="_self">src code</a>
+<br>
+<p align="center"><img src="readme-assets/cozmo-robot.jpg" width="" height="100"/></p>
+</p>
+
 <p>Goal:</p>
 <ul>
 <li>Implement MCL with Anki Cozmo</li>
@@ -94,6 +112,10 @@ i.	Connect USB cable from phone to computer<ol>
 <li><code>/cozmo-images-kidnap/</code>: images for kidnap problem (collected data that is updated for each run)</li>
 <li><code>/cozmo-imgs-data1/</code>: data for remote work</li>
 <li><code>/cozmo_sdk_examples_1.4.10/</code>: <a href="http://cozmosdk.anki.com/docs/downloads.html">SDK Examples code</a> for Cozmo bot.</li>
+<li><code>/model/</code>: dir for training neural network model<ul>
+<li><code>/data/</code>: dataset of 1440 gray-scaled imgs collected in Glat112 and Glat207 (72 imgs/360 degrees).</li>
+</ul>
+</li>
 <li><code>cozmo_MCL.py</code>: New MCL implementation, based on previous group&#39;s work</li>
 <li><code>img_processing.py</code>: functiona to get imgs, process imgs, save imgs</li>
 <li><code>pic_collection.py</code>: functions to collect pictures for pano, taking a single image for MCL.</li>
@@ -101,7 +123,7 @@ i.	Connect USB cable from phone to computer<ol>
 <li><code>kidnap.py</code>: Running of kidnapped robot problem, using MCL, image processing, and pic collection.</li>
 <li><code>MCL_old.py</code>: old MCL (not true MCL -&gt; not accurate)</li>
 <li><code>requirements.txt</code>: has all required installs for use with our code and Cozmo</li>
-<li><code>hist.png</code>: histogram of collected belief probablities after MCL is ran</li>
+<li><code>hist.png</code>: histogram of collected belief probablities after MCL is run</li>
 <li><code>Sliced.jpg</code>: picture file used during MCL to compare current location to pano</li>
 <li><code>html-generator.py</code>: convert <code>md</code> to <code>html</code> file using <a href="https://codebeautify.org/markdown-to-html">codebeautify.org</a>.</li>
 </ul>
@@ -111,7 +133,26 @@ i.	Connect USB cable from phone to computer<ol>
 <h2 id="functionality">Functionality</h2>
 <p>Our Cozmo MCL was able to localize with reasonable accuracy in some environments (in case the Stitching works well). Locations with repeatative patterns or extreme amounts of light greatly reduced accuracy of the localization. </p>
 <p>Our group was able to improve upon a past group&#39;s MCL and make it give Cozmo a command to turn to home accordingly toward from its most believed location. Our group also created a histogram with clustered probablities and implemented the highest belief into the MCL.</p>
-<p><img src="hist.png" alt=""></p>
+<h3 id="results">Results</h3>
+<p>Building off of the work of Leah Attai, Casey Rhodes, and Rachel Fuller, as well as examples provided by Mohammad Altaleb, we were able to construct a Monte Carlo Localization System that successfully localized the Anki Cozmo robot in some environments. Our system centered around a set of 20 photos taken 18 degrees apart to form a panorama. The panorama mapped the 360 degree area around the robot prior to its &quot;kidnapping.&quot; By rotating the robot an arbitrary number of degrees, we then &quot;kidnapped&quot; the robot. The robot would then take a single picture, and we performed a set of pixel-matching operations to determine which section of the panorama most likely corresponded with the robot&#39;s kidnapped heading. We would repeat this process ten times, rotating the robot slighty each time to collect varied data and increase the accuracy of our final identification. Thus having localized, we turned the robot to turn towards its initial &quot;home&quot; position, represented as the starting point of the panorama, reversing the kidnapping.</p>
+<p>Our system&#39;s performance was generally dependent upon the success of two functions. Firstly, in order to create the panorama it was necessary to stitch together the 20 initial photos. Our stitching function, based on an example from OpenCV, struggled in certain environments that reduced the distinctions between certain photos. Too much or too little light, or a lack of identifiable landmarks would stymie the algorithm, and thus produce a low-confidence panorama that induced difficulties in our localization attempts. Secondly, out pixel-matching comparison algorithm would struggle from much the same issues, running into situations were a large area of the panorama (such as a white wall) appeared as candidates for localizations. This issue was likely the cause of several failed tests where the Cozmo robot localized close but not exactly to its home position, within 20 degrees or so.</p>
+<p>The following table shows examples of test images taken in sequence that were and were not conducive to panorama-based localization. The top two, taken in the CS Lounge, are visually distinct with enough &quot;landmarks&quot; such as the striped couch, trash can, person, and chair to allow our algorithm to successfully localize. The bottom two, taken next to the CS Lounge printer, are too similar for the algorithm to extract any meaningful data -- localizations in this area appeared to be little more than guesses.</p>
+<table align="center"> 
+      <tr>
+        <td><img src="readme-assets/62.jpg"></td>
+        <td><img src="readme-assets/63.jpg"></td>
+      </tr>
+      <tr>
+        <td><img src="readme-assets/25.jpg"></td>
+        <td><img src="readme-assets/26.jpg"></td>
+      </tr>
+   </table>
+
+<p>This Histogram shows the results of one test of our localization system. The X-Axis is the width of the panorama corresponding to the 360 degree area in pixels, the Y-Axis the total probabilistic likelihood that the Cozmo is facing that area of the panorama. Blue lines represent the Cozmo&#39;s confidence in its location before localization, orange represents its confidence after localization. The point with the highest probability, here just after pixel 1400, was selected as the kidnapped location.</p>
+<p align="center">
+<img src="readme-assets/hist.png" width="" height="400"/>
+</p>
+
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
 
 <hr>
@@ -255,10 +296,15 @@ i.	Connect USB cable from phone to computer<ol>
 <td align="right">Nick, Quan, Brayton</td>
 </tr>
 <tr>
-<td align="left">4/25: 5:00-7:30PM</td>
-<td align="left">Clean code &amp; add html-generator</td>
+<td align="left">4/25: 5:15-8:30PM</td>
+<td align="left">Clean code, add html-generator, create dataset (1440 imgs)</td>
 <td align="right">Quan</td>
 </tr>
 </tbody></table>
 </details>
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
+
+<hr>
+<p><em>Note:</em> markdown to html conversion using <a href="https://codebeautify.org/markdown-to-html">codebeautify.org</a></p>
+</body>
+</html>
