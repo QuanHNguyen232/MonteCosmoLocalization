@@ -1,6 +1,6 @@
 import os
 import random
-import math
+import cv2
 import pandas as pd
 import numpy as np
 import matplotlib.pylab as plt
@@ -13,7 +13,6 @@ from torchvision import transforms
 import sys
 sys.path.append('../')
 from utils.util import load_cfg
-from utils.util import get_img
 
 class MyDataset(Dataset):
     def __init__(self, df, cfg):
@@ -34,15 +33,20 @@ class MyDataset(Dataset):
         P_id = (A_id + (1 if random.random() < 0.5 else -1)) % row['sample_size']
         N_id = random.choice(list(set(range(row['sample_size'])) - set([A_id-1, A_id, A_id+1])))
         
-        A_img = get_img(os.path.join(self.data_dir, f'{row.sample_id}/{A_id}.jpg'), img_size)
-        P_img = get_img(os.path.join(self.data_dir, f'{row.sample_id}/{P_id}.jpg'), img_size)
-        N_img = get_img(os.path.join(self.data_dir, f'{row.sample_id}/{N_id}.jpg'), img_size)
+        A_img = self.get_img(os.path.join(self.data_dir, f'{row.sample_id}/{A_id}.jpg'), img_size)
+        P_img = self.get_img(os.path.join(self.data_dir, f'{row.sample_id}/{P_id}.jpg'), img_size)
+        N_img = self.get_img(os.path.join(self.data_dir, f'{row.sample_id}/{N_id}.jpg'), img_size)
         
-        A_img = torch.from_numpy(A_img).permute(2, 0, 1) / 255.0  # permute: (h, w, c)->(c, h, w)
-        P_img = torch.from_numpy(P_img).permute(2, 0, 1) / 255.0
-        N_img = torch.from_numpy(N_img).permute(2, 0, 1) / 255.0
-        return A_img.to(self.device), P_img.to(self.device), N_img.to(self.device)
-
+        A_img = torch.from_numpy(A_img).permute(2, 0, 1).to(self.device) / 255.0  # permute: (h, w, c)->(c, h, w)
+        P_img = torch.from_numpy(P_img).permute(2, 0, 1).to(self.device) / 255.0
+        N_img = torch.from_numpy(N_img).permute(2, 0, 1).to(self.device) / 255.0
+        return A_img, P_img, N_img
+    
+    def get_img(self, img_path: str, img_size):
+      img = cv2.imread(img_path)
+      img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+      img = cv2.resize(img, img_size, interpolation = cv2.INTER_LINEAR)
+      return img
 
 if __name__ == '__main__':
     cfg = load_cfg('../config/configuration.json')

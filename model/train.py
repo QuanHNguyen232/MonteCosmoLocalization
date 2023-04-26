@@ -22,7 +22,7 @@ def train_fn(model: MyModel, dataloader: DataLoader, optimizer: torch.optim, cri
         loss = criterion(*output)
 
         loss.backward()
-        criterion.step()
+        optimizer.step()
 
         total_loss += loss.item()
     return total_loss / len(dataloader)
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     criterion = nn.TripletMarginLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg['LR'])
     
-    with torch.no_grad:
+    with torch.no_grad():
         for batch in tqdm(trainloader):
             break
         output = model(*batch)
