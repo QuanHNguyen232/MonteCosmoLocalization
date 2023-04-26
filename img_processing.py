@@ -44,10 +44,13 @@ def get_img_rgb(filename: str) -> np.ndarray:
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     return img
 
-def save_img(img: np.ndarray, filepath: str) -> None:
-    img = img_np2PIL(img)
-    img.save(filepath)
-    # cv2.imwrite(filepath, img, [cv2.IMWRITE_JPEG_QUALITY, 100])
+def save_img(img, filepath: str) -> None:
+    '''
+    img: np.ndarray or PIL.Image.Image
+    '''
+    # img = img_np2PIL(img)
+    # img.save(filepath)
+    cv2.imwrite(filepath, img, [cv2.IMWRITE_JPEG_QUALITY, 100])
 
 def normalize_img(img: np.ndarray) -> np.ndarray:
     scale = 255.0 if img.max() > 200.0 else img.max()

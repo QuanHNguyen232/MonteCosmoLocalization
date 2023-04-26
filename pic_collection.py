@@ -4,6 +4,7 @@ import os
 import cv2
 import numpy as np
 import img_processing as imgPr
+import PIL
 from PIL import Image, ImageOps
 
 
@@ -49,7 +50,7 @@ def take_imgs(robot: cozmo.robot.Robot, num_pic=15, img_dir=IMG_DIR, is_stitch=T
             img = ImageOps.grayscale(converted)
             img = np.array(img)
 
-            imgPr.save_img(img, os.path.join(img_dir, f'{i}-{currAngle}.jpg'))
+            imgPr.save_img(img, os.path.join(img_dir, f'{i}.jpg'))
             
             robot.turn_in_place(degrees(rotateAngle), speed=degrees(45)).wait_for_completed()
             currAngle += rotateAngle
@@ -59,11 +60,11 @@ def take_imgs(robot: cozmo.robot.Robot, num_pic=15, img_dir=IMG_DIR, is_stitch=T
     #stich panorama togehter from our images collected
     if is_stitch: imgPr.stitching()
 
-def collect_imgs(num_pic: int=20, img_dir: str='./cozmo-images'):
+def collect_imgs(num_pic: int=20, img_dir: str='./cozmo-dataset'):
     cozmo.run_program(lambda x : take_imgs(x, num_pic, img_dir, False))
 
 def collect_an_img(img_name: str):
     cozmo.run_program(lambda x : take_an_img(x, img_name))
 
 if __name__ == '__main__':
-    collect_imgs()
+    collect_imgs(num_pic=72, img_dir='./model/data/19')

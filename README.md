@@ -86,6 +86,8 @@ Following the [installation guide from Cozmo](http://cozmosdk.anki.com/docs/init
 * `/cozmo-images-kidnap/`: images for kidnap problem (collected data that is updated for each run)
 * `/cozmo-imgs-data1/`: data for remote work
 * `/cozmo_sdk_examples_1.4.10/`: [SDK Examples code](http://cozmosdk.anki.com/docs/downloads.html) for Cozmo bot.
+* `/model/`: dir for training neural network model
+   * `/data/`: dataset of 1440 gray-scaled imgs collected in Glat112 and Glat207 (72 imgs/360 degrees).
 * `cozmo_MCL.py`: New MCL implementation, based on previous group's work
 * `img_processing.py`: functiona to get imgs, process imgs, save imgs
 * `pic_collection.py`: functions to collect pictures for pano, taking a single image for MCL.
@@ -153,7 +155,7 @@ Our group's localization also relied on a program to randomly determine a kidnap
 | 4/23: 7:00-10:00PM| Modified MCL to use new map system | Brayton |
 | 4/24: 9:30-10:30AM| Changing MCL and supplementary files | Brayton |
 | 4/24: 1:00-2:00PM| Documentation and archiving of work | Nick, Quan, Brayton |
-| 4/25: 5:00-7:30PM| Clean code & add html-generator| Quan |
+| 4/25: 5:15-8:30PM| Clean code, add html-generator, create dataset (1440 imgs)| Quan |
 
 </details>
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
