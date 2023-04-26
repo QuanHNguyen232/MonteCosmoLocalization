@@ -15,22 +15,21 @@ def convert_md2html(download_dir:str,
         outfile: name of output file (filename.html)
         download_dir: the directory that file will be downloaded (usually "Downloads" if using Chrome)
     Return:
-        None - created an html file with name from outfile
+        None - created an html file with name from outfile under same dir as md_filename
     '''
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-    driver.implicitly_wait(1.0)
-    driver.maximize_window()
+    driver.implicitly_wait(1)
     driver.get("https://codebeautify.org/markdown-to-html")
 
     # Upload file
     file_input = driver.find_element(by=By.ID, value='fileInput')
-    driver.implicitly_wait(5)
+    driver.implicitly_wait(1)
     file_input.send_keys(os.path.abspath(md_filename))
-    driver.implicitly_wait(5)
     time.sleep(2)
     # Download file
-    download_btn = driver.find_element(by=By.XPATH, value='//button[@class="button is-fullwidth "]')
-    download_btn.click()
+    # https://stackoverflow.com/questions/57741875/selenium-common-exceptions-elementclickinterceptedexception-message-element-cl
+    download_btn = driver.find_element(by=By.XPATH, value='''//button[@onclick="createFile('md');"]''')
+    driver.execute_script('arguments[0].click()', download_btn)
     time.sleep(2)
     # Quit the browser
     driver.quit()
@@ -38,7 +37,7 @@ def convert_md2html(download_dir:str,
 
     # this is the default filename from the website
     filename = 'markdown-to-html.md'
-    # Move file to current dir
+    # move file to same dir as md file
     saving_dir = os.path.dirname(os.path.abspath(md_filename))
     shutil.move(os.path.join(download_dir, filename), saving_dir)
     # write finished version of html:5
@@ -69,5 +68,4 @@ def write_html(inname, outname):
     print('Done writing html:5 file')
 
 if __name__ == '__main__':
-    convert_md2html(download_dir='D:/Downloads-D')#'/Accounts/turing/students/s24/nguyqu03/Downloads'    
-    
+    convert_md2html(download_dir='D:/Downloads-D')#'/Accounts/turing/students/s24/nguyqu03/Downloads'
