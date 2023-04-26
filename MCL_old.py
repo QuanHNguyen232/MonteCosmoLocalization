@@ -78,7 +78,7 @@ if __name__ == '__main__':
 	num_imgs = 20
 	for i in range(num_imgs):
 		imgname = f'{IMG_DIR}/{i}-{i*(360.0/num_imgs)}.jpg'
-		img = imgPr.normalize_img(imgPr.get_img(imgname))
+		img = imgPr.normalize_img(imgPr.get_img_gray(imgname))
 		all_particles.append(img)
 	all_particles = [img_process(img) for img in all_particles]
 
@@ -95,7 +95,7 @@ if __name__ == '__main__':
 	for i in range(num_rotate):
 		# random_imgname = f'{IMG_DIR}/{random_loc+i}-{(random_loc+i)*(360.0/num_imgs)}.jpg'
 		random_imgname = f'{IMG_DIR}/kidnapPhoto.jpg'
-		currData = imgPr.normalize_img(imgPr.get_img(random_imgname))
+		currData = imgPr.normalize_img(imgPr.get_img_gray(random_imgname))
 		prob = MCLocalize(prob, all_particles, 1, img_process(currData), 'mse')
 
 		# print([round(val, 5) for val in prob])

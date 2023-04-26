@@ -1,5 +1,8 @@
 cozmo[camera]
+pandas
 numpy
 opencv-python
 matplotlib
 Pillow
+selenium
+webdriver-manager
