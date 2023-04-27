@@ -191,7 +191,7 @@ Our group's localization also relied on a program to randomly determine a kidnap
 | 4/26: 10:00-3:00AM | Populate website, write copy, finalize website objects and sections | Doug |
 | 4/26: 11:00-12:15PM | Add baseline to train siamese network | Quan |
 | 4/26: 1:30-3:30PM | Add training loop | Quan |
-| 4/27: 4:30-6:00AM | Fine-tuned model on our dataset (success) | Quan |
+| 4/27: 4:30-6:30AM | Fine-tuned model on our dataset (success) | Quan |
 
 </details>
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
