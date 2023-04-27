@@ -185,8 +185,10 @@ Our group's localization also relied on a program to randomly determine a kidnap
 | 4/22: 8:00-9:00PM| Modified kidnap | Brayton |
 | 4/23: 7:00-10:00PM| Modified MCL to use new map system | Brayton |
 | 4/24: 9:30-10:30AM| Changing MCL and supplementary files | Brayton |
+| 4/24: 7:00-9:00PM| Researching CNN Models for Image array map| Brayton |
 | 4/24: 1:00-2:00PM| Documentation and archiving of work | Nick, Quan, Brayton |
 | 4/25: 5:15-8:30PM| Clean code, add html-generator, create dataset (1440 imgs)| Quan |
+| 4/25: 7:00-12:00AM| implement sentence_transformers, found unuseful with pretrained model| Brayton | 
 
 </details>
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
