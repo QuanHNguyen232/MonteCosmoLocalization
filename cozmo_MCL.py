@@ -25,7 +25,7 @@ proportionalMotionVariance = 0.01
 def MCL(robot: cozmo.robot.Robot):
   panoPixelArray = cv2.imread("cozmo-images-kidnap\c-Panorama.jpg") #image to read in, should read in our pano (the cropped one)
   panoPixelArray.astype("float")                                    #make sure to change other references to desired image as needed in this file
-  height, width = panoPixelArray.shape
+  width = panoPixelArray.shape[1]
   # Initialize cozmo camera
   robot.camera.image_stream_enabled = True
   pixelWeights = [] # predictions
