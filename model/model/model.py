@@ -1,21 +1,24 @@
 import torch
 import torch.nn as nn
 
-from torchvision.models import vgg16_bn, VGG16_BN_Weights
+from torchvision.models import vgg16_bn, VGG16_BN_Weights, resnet18, ResNet18_Weights
 
 import sys
 sys.path.append('../')
 from utils.util import load_cfg
 
 class MyModel(nn.Module):
-    def __init__(self, emb_size=512):
+    def __init__(self, modeltype='resnet18', emb_size=512):
         super(MyModel, self).__init__()
-        self.backbone = vgg16_bn(weights=VGG16_BN_Weights.DEFAULT)
-        self.backbone.classifier[3] = nn.Linear(in_features=self.backbone.classifier[3].in_features,
-                                                out_features=self.backbone.classifier[3].in_features // 2)
-        self.backbone.classifier[6] = nn.Linear(in_features=self.backbone.classifier[3].out_features,
+        self.modeltype = modeltype
+        if modeltype == 'resnet18':
+          self.backbone = resnet18(ResNet18_Weights.DEFAULT)
+          self.backbone.fc = nn.Linear(in_features=self.backbone.fc.in_features, out_features=emb_size)
+        else:
+          self.modeltype = 'vgg16_bn'
+          self.backbone = vgg16_bn(weights=VGG16_BN_Weights.DEFAULT)
+          self.backbone.classifier[6] = nn.Linear(in_features=self.backbone.classifier[6].out_features,
                                                 out_features=emb_size)
-        self.freeze_layer()
 
     def forward_one(self, x):
         x = self.backbone(x)
@@ -27,13 +30,9 @@ class MyModel(nn.Module):
         n = self.forward_one(n)
         return a, p, n
     
-    def freeze_layer(self):
-        for name, param in self.backbone.features[:34].named_parameters():
-            param.requires_grad = False
-
 if __name__ == '__main__':
     cfg = load_cfg('../config/configuration.json')
-    model = MyModel(cfg['emb_size'])
+    model = MyModel(emb_size=cfg['emb_size'])
     print(model)
     # for name, param in model.named_parameters():
     #     print(name, param.requires_grad)

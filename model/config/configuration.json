@@ -1,9 +1,8 @@
 {
   "data_dir": "/Accounts/turing/students/s24/nguyqu03/Desktop/MonteCosmoLocalization/model/data",
   "split-point": 15,
-  "img_size": 240,
   "emb_size": 512,
   "batch_size": 16,
-  "epochs": 5,
+  "epochs": 10,
   "LR": 0.001
   }

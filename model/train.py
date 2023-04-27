@@ -43,7 +43,7 @@ def train_loop(model, trainloader, validloader, criterion, optimizer, cfg):
         train_loss = train_fn(model, trainloader, optimizer, criterion)
         valid_loss = valid_fn(model, validloader, criterion)
         if valid_loss < best_valid_loss:
-            torch.save(model.state_dict(), 'best_model.pt')
+            torch.save(model.state_dict(), f'best_{model.modeltype}.pt')
             best_valid_loss = valid_loss
             print('SAVED_WEIGHTS success')
         
@@ -64,15 +64,15 @@ if __name__ == '__main__':
     validloader = DataLoader(validset, cfg['batch_size'])
     print('dataloader created')
     
-    model = MyModel(cfg['emb_size'])
+    model = MyModel(modeltype='resnet18', emb_size=cfg['emb_size'])
+    model_weight_path = f'best_{model.modeltype}.pt'
+    if os.path.exists(model_weight_path):
+        model.load_state_dict(torch.load(model_weight_path))
+        print('loaded saved model')
     model.to(cfg['device'])
-    print('model created')
+    print('model created, type=', model.modeltype)
 
     criterion = nn.TripletMarginLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg['LR'])
     
-    with torch.no_grad():
-        for batch in tqdm(trainloader):
-            break
-        output = model(*batch)
-    # train_loop(model, trainloader, validloader, criterion, optimizer, cfg)
+    train_loop(model, trainloader, validloader, criterion, optimizer, cfg)
