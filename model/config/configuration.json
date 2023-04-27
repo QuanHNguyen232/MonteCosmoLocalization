@@ -1,8 +1,10 @@
 {
   "data_dir": "/Accounts/turing/students/s24/nguyqu03/Desktop/MonteCosmoLocalization/model/data",
+  "save_model_dir": "/Accounts/turing/students/s24/nguyqu03/Desktop/MonteCosmoLocalization/model/saved",
   "split-point": 15,
   "emb_size": 512,
   "batch_size": 16,
-  "epochs": 10,
-  "LR": 0.001
+  "epochs": 20,
+  "LR": 0.001,
+  "scheduler_milestones": [10, 18]
   }

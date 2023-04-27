@@ -29,8 +29,8 @@ class MyDataset(Dataset):
         row = self.df.iloc[index]
 
         A_id = row['image_id']
-        P_id = (A_id + (1 if random.random() < 0.5 else -1)) % row['sample_size']
-        N_id = random.choice(list(set(range(row['sample_size'])) - set([A_id-1, A_id, A_id+1])))
+        P_id = (A_id + random.choice([-2, -1, 1, 2])) % row['sample_size']
+        N_id = random.choice(list(set(range(row['sample_size'])) - set([A_id-2, A_id-1, A_id, A_id+1, A_id+2])))
         
         A_img = self.get_img(os.path.join(self.data_dir, f'{row.sample_id}/{A_id}.jpg'))
         P_img = self.get_img(os.path.join(self.data_dir, f'{row.sample_id}/{P_id}.jpg'))

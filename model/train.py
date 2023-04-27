@@ -65,7 +65,7 @@ if __name__ == '__main__':
     print('dataloader created')
     
     model = MyModel(modeltype='resnet18', emb_size=cfg['emb_size'])
-    model_weight_path = f'best_{model.modeltype}.pt'
+    model_weight_path = os.path.join(cfg['save_model_dir'], f'best_{model.modeltype}.pt')
     if os.path.exists(model_weight_path):
         model.load_state_dict(torch.load(model_weight_path))
         print('loaded saved model')
@@ -74,5 +74,6 @@ if __name__ == '__main__':
 
     criterion = nn.TripletMarginLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg['LR'])
-    
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=cfg['scheduler_milestones'], gamma=2/3.0)
+
     train_loop(model, trainloader, validloader, criterion, optimizer, cfg)
