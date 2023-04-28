@@ -13,7 +13,7 @@ Nicholas Stach, Quan Nguyen, Brayton Alkinburgh, Douglas Harsha
 <br>
 <i>Spring 2023</i>
 <br>
-<a href="https://github.com/QuanHNguyen232/MonteCosmoLocalization" target="_self">src code</a>
+Src code (<a href="https://github.com/QuanHNguyen232/MonteCosmoLocalization" target="_self">github</a>, <a href="./MonteCosmoLocalization.zip" target="_self">zip</a>)
 <br>
 <p align="center"><img src="readme-assets/cozmo-robot.jpg" width="" height="100"/></p>
 </p>
@@ -22,7 +22,7 @@ Nicholas Stach, Quan Nguyen, Brayton Alkinburgh, Douglas Harsha
 <ul>
 <li>Implement MCL with Anki Cozmo</li>
 <li>Create Panorama of collected images from which the Cozmo bot can use to find its position and relocate itself.</li>
-<li>Create means of displaying belief probabilities.s</li>
+<li>Create means of displaying belief probabilities.</li>
 <li>Docs: <a href="https://data.bit-bots.de/cozmo_sdk_doc/cozmosdk.anki.com/docs/api.html">Cozmo API</a></li>
 <li>Helpful <a href="https://github.com/nheidloff/visual-recognition-for-cozmo-with-tensorflow/blob/master/1-take-pictures/take-pictures.py">link</a> for taking pictures with cozmo and saving them.</li>
 </ul>
@@ -78,6 +78,22 @@ i.	Connect USB cable from phone to computer<ol>
 </li>
 <li>Download the SDK Examples, open Cozmo app, connect with cozmo bot (ensure the robot does not fall off the desk) -&gt; setting -&gt; enable SDK. Then try running the examples.</li>
 </ol>
+<h3 id="website-publishing">Website Publishing</h3>
+<ol>
+<li><p>Generate html file:</p>
+<ul>
+<li>In <code>html-generator.py</code>, change the <code>download_dir</code> into your Chrome&#39;s download folder</li>
+<li>Run the generator:<pre><code class="language-bash">python html-generator.py
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>Upload html file and assets (if any) to /<code>public_html/</code> folder on lab machine at Gettysburg College</p>
+<pre><code class="language-bash">chmod -R 755 ~/public_html/folder_to_publish
+chmod -R 755 .
+</code></pre>
+</li>
+</ol>
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
 
 <hr>
@@ -131,11 +147,11 @@ i.	Connect USB cable from phone to computer<ol>
 
 <hr>
 <h2 id="functionality">Functionality</h2>
-<p>Our Cozmo MCL was able to localize with reasonable accuracy in some environments (in case the Stitching works well). Locations with repeatative patterns or extreme amounts of light greatly reduced accuracy of the localization. </p>
-<p>Our group was able to improve upon a past group&#39;s MCL and make it give Cozmo a command to turn to home accordingly toward from its most believed location. Our group also created a histogram with clustered probablities and implemented the highest belief into the MCL.</p>
+<p>Our Cozmo MCL was able to localize with reasonable accuracy in some environments (in cases where the Stitching works well). Locations with repetative patterns or extreme amounts of light greatly reduced accuracy of the localization. </p>
+<p>Our group was able to improve upon a past group&#39;s MCL and make it give Cozmo a command to turn to home accordingly toward from its most believed location. Our group also created a histogram with clustered probablities and implemented the highest belief into the MCL to serve as the location to turn to.</p>
 <h3 id="results">Results</h3>
-<p>Building off of the work of Leah Attai, Casey Rhodes, and Rachel Fuller, as well as examples provided by Mohammad Altaleb, we were able to construct a Monte Carlo Localization System that successfully localized the Anki Cozmo robot in some environments. Our system centered around a set of 20 photos taken 18 degrees apart to form a panorama. The panorama mapped the 360 degree area around the robot prior to its &quot;kidnapping.&quot; By rotating the robot an arbitrary number of degrees, we then &quot;kidnapped&quot; the robot. The robot would then take a single picture, and we performed a set of pixel-matching operations to determine which section of the panorama most likely corresponded with the robot&#39;s kidnapped heading. We would repeat this process ten times, rotating the robot slighty each time to collect varied data and increase the accuracy of our final identification. Thus having localized, we turned the robot to turn towards its initial &quot;home&quot; position, represented as the starting point of the panorama, reversing the kidnapping.</p>
-<p>Our system&#39;s performance was generally dependent upon the success of two functions. Firstly, in order to create the panorama it was necessary to stitch together the 20 initial photos. Our stitching function, based on an example from OpenCV, struggled in certain environments that reduced the distinctions between certain photos. Too much or too little light, or a lack of identifiable landmarks would stymie the algorithm, and thus produce a low-confidence panorama that induced difficulties in our localization attempts. Secondly, out pixel-matching comparison algorithm would struggle from much the same issues, running into situations were a large area of the panorama (such as a white wall) appeared as candidates for localizations. This issue was likely the cause of several failed tests where the Cozmo robot localized close but not exactly to its home position, within 20 degrees or so.</p>
+<p>Building off of the work of Leah Attai, Casey Rhodes, and Rachel Fuller, as well as examples provided by Mohammad Altaleb, we were able to construct a Monte Carlo Localization System that successfully localized the Anki Cozmo robot in some environments. Our system centered around a set of 30 photos taken 12 degrees apart to form a panorama. The panorama mapped the 360 degree area around the robot prior to its &quot;kidnapping.&quot; By rotating the robot an arbitrary number of degrees, we then &quot;kidnapped&quot; the robot. The robot would then take a single picture, and we performed a set of pixel-matching operations to determine which section of the panorama most likely corresponded with the robot&#39;s kidnapped heading. We would repeat this process ten times, rotating the robot slighty each time to collect varied data and increase the accuracy of our final identification. Thus having localized, we turned the robot to turn towards its initial &quot;home&quot; position, represented as the starting point of the panorama, reversing the kidnapping.</p>
+<p>Our system&#39;s performance was generally dependent upon the success of two functions. Firstly, in order to create the panorama it was necessary to stitch together the 30 initial photos. Our stitching function, based on an example from OpenCV, struggled in certain environments that reduced the distinctions between certain photos. Too much or too little light, or a lack of identifiable landmarks would stymie the algorithm, and thus produce a low-confidence panorama that induced difficulties in our localization attempts. Secondly, out pixel-matching comparison algorithm would struggle from much the same issues, running into situations were a large area of the panorama (such as a white wall) appeared as candidates for localizations. This issue was likely the cause of several failed tests where the Cozmo robot localized close but not exactly to its home position, within 20 degrees or so.</p>
 <p>The following table shows examples of test images taken in sequence that were and were not conducive to panorama-based localization. The top two, taken in the CS Lounge, are visually distinct with enough &quot;landmarks&quot; such as the striped couch, trash can, person, and chair to allow our algorithm to successfully localize. The bottom two, taken next to the CS Lounge printer, are too similar for the algorithm to extract any meaningful data -- localizations in this area appeared to be little more than guesses.</p>
 <table align="center"> 
       <tr>
@@ -157,7 +173,7 @@ i.	Connect USB cable from phone to computer<ol>
 
 <hr>
 <h2 id="future-goals">Future Goals</h2>
-<p>The stitching algorithm used in this project would sometimes struggle with environments with few landmarks or excess/lack of light, not stitching all images together (issue from OpenCV). This would create a panorama that was not a true 360 degree view. Future groups could attempt a different stitching algorithm or attempt to build a world map in a different way. </p>
+<p>The stitching algorithm used in this project would sometimes struggle with environments with few landmarks or excess/lack of light, thus not stitching all images together (issue from OpenCV). This would create a panorama that was not a true 360 degree view. Future groups could attempt a different stitching algorithm or attempt to build a world map in a different way. Our group recommendation is to avoid the use of a panorama (stitched from images) all together, as it proved too brittle for varied environments and was never as accurate as we had wanted. Other groups in this semester reported similar negative findings on the use of a panorama as well.</p>
 <p>Future groups could also rework our MCL to where Cozmo does not stop localizing until a certain belief probability/number of predictions for a location is reached. Our current implementation only rotates 10 times to localize before committing to the final belief probabilities.</p>
 <p>Our group&#39;s localization also relied on a program to randomly determine a kidnap location and then would automatically run MCL to localize. Future groups could have Cozmo map it&#39;s environment, then be in a state where it tries localize if it believes it is not at &quot;home.&quot;</p>
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
@@ -256,11 +272,6 @@ i.	Connect USB cable from phone to computer<ol>
 <td align="right">Nick</td>
 </tr>
 <tr>
-<td align="left">4/16: 2:00-4:30PM</td>
-<td align="left">Make Cozmo relocalize after MCL</td>
-<td align="right">Nick</td>
-</tr>
-<tr>
 <td align="left">4/21: 1:00-2:30PM</td>
 <td align="left">Cozmo localization tuning, website with documentation</td>
 <td align="right">Nick, Doug, Brayton</td>
@@ -296,8 +307,38 @@ i.	Connect USB cable from phone to computer<ol>
 <td align="right">Nick, Quan, Brayton</td>
 </tr>
 <tr>
+<td align="left">4/24: 10:00-12:00PM</td>
+<td align="left">Write website framework, outline, review final code</td>
+<td align="right">Doug</td>
+</tr>
+<tr>
 <td align="left">4/25: 5:15-8:30PM</td>
 <td align="left">Clean code, add html-generator, create dataset (1440 imgs)</td>
+<td align="right">Quan</td>
+</tr>
+<tr>
+<td align="left">4/25: 7:00-12:00AM</td>
+<td align="left">Implement sentence_transformers, found unuseful with pretrained (clip-ViT-B-32)</td>
+<td align="right">Brayton</td>
+</tr>
+<tr>
+<td align="left">4/26: 10:00-3:00AM</td>
+<td align="left">Populate website, write copy, finalize website objects and sections</td>
+<td align="right">Doug</td>
+</tr>
+<tr>
+<td align="left">4/26: 11:00-12:15PM</td>
+<td align="left">Add baseline to train siamese network</td>
+<td align="right">Quan</td>
+</tr>
+<tr>
+<td align="left">4/26: 1:30-3:30PM</td>
+<td align="left">Add training loop</td>
+<td align="right">Quan</td>
+</tr>
+<tr>
+<td align="left">4/27: 4:30-6:30AM</td>
+<td align="left">Fine-tuned model on our dataset (success)</td>
 <td align="right">Quan</td>
 </tr>
 </tbody></table>

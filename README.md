@@ -5,7 +5,7 @@ Nicholas Stach, Quan Nguyen, Brayton Alkinburgh, Douglas Harsha
 <br>
 <i>Spring 2023</i>
 <br>
-<a href="https://github.com/QuanHNguyen232/MonteCosmoLocalization" target="_self">src code</a>
+Src code (<a href="https://github.com/QuanHNguyen232/MonteCosmoLocalization" target="_self">github</a>, <a href="./MonteCosmoLocalization.zip" target="_self">zip</a>)
 <br>
 <p align="center"><img src="readme-assets/cozmo-robot.jpg" width="" height="100"/></p>
 </p>
@@ -65,6 +65,19 @@ Following the [installation guide from Cozmo](http://cozmosdk.anki.com/docs/init
    1.	Enable SDK on Cozmo app
 1. Download the SDK Examples, open Cozmo app, connect with cozmo bot (ensure the robot does not fall off the desk) -> setting -> enable SDK. Then try running the examples.
 
+### Website Publishing
+1. Generate html file:
+   * In `html-generator.py`, change the `download_dir` into your Chrome's download folder
+   * Run the generator:
+      ```bash
+      python html-generator.py
+      ```
+
+1. Upload html file and assets (if any) to /`public_html/` folder on lab machine at Gettysburg College
+   ```bash
+   chmod -R 755 ~/public_html/folder_to_publish
+   chmod -R 755 .
+   ```
 
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
 
