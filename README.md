@@ -206,6 +206,7 @@ Our group's localization also relied on a program to randomly determine a kidnap
 | 4/26: 1:30-3:30PM | Add training loop | Quan |
 | 4/27: 4:30-6:30AM | Fine-tuned model on our dataset (success) | Quan |
 
+
 </details>
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
 
