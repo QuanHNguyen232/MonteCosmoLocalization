@@ -25,9 +25,7 @@ proportionalMotionVariance = 0.01
 def MCL(robot: cozmo.robot.Robot):
   panoPixelArray = cv2.imread("cozmo-images-kidnap\c-Panorama.jpg") #image to read in, should read in our pano (the cropped one)
   panoPixelArray.astype("float")                                    #make sure to change other references to desired image as needed in this file
-  dimensions = panoPixelArray.shape
-  width = dimensions[1]
-  hieght = dimensions[0]
+  width = panoPixelArray.shape[1]
   # Initialize cozmo camera
   robot.camera.image_stream_enabled = True
   pixelWeights = [] # predictions
@@ -40,6 +38,12 @@ def MCL(robot: cozmo.robot.Robot):
   while i < M:
       particles.append(random.randint(0, width))
       i = i + 1
+  
+  '''
+  Try this instead
+  '''
+  # particles = np.random.randint(0, width, (M, 1))
+
   # Saves preliminary predictions to a dataframe
   pointFrame = pd.DataFrame(particles, columns=['particles'])
   
@@ -111,6 +115,9 @@ def MCL(robot: cozmo.robot.Robot):
   mostBelievedLoc = histogram.makeHistogram()   # get max bin for 'newParticles' histogram, this is most frequent belief predication after MCL of a pixel range 10
                                                 # (where Cozmo thinks it is after MCL)
   #get width of panorama, our 'map' of the environment
+  '''
+  I believe this part of reading image and get width is redundant since you did it on line 26
+  '''
   pano = cv2.imread("cozmo-images-kidnap\c-Panorama.jpg") # our cropped panorama
   dimensions = pano.shape
   width = dimensions[1]
@@ -172,6 +179,11 @@ def compare_images(imageA, imageB):
   dimensions = imageA.astype("float").shape
   width = dimensions[1]
   height = dimensions[0]
+  '''
+  Try this instead (lines 179-181)
+
+  height, width = imageA.shape
+  '''
   err = np.sum((imageA.astype("float") - imageB.astype("float")) ** 2)
   # Dividing the values so they fit 
   err /= (width * height * width * height)
@@ -183,6 +195,9 @@ def slice(imgName, center, pixelLeft, pixelRight, slice_size):
   # initialize boundaries
   img = imgName #Image.open("cozmo-images-kidnap\c-Panorama.jpg")
   width, height = img.size
+  ''' Line 197
+  img.size returns width, height instead of height, width ???
+  '''
   left = center - pixelLeft
   right = center + pixelRight
 
@@ -191,7 +206,11 @@ def slice(imgName, center, pixelLeft, pixelRight, slice_size):
       left = 0
   if center > (width - pixelRight):
       right = width
-
+  ''' Try this instead (line 193-200)
+  
+  left = max(center - pixelLeft, 0)
+  right = min(center + pixelRight, width)
+  '''
   # newImgSize = dim(center - 20, center + 20)
   upper = 0
   slices = int(math.ceil(width / slice_size))
@@ -244,7 +263,7 @@ if __name__ == '__main__':
   panoPixelArray.astype("float")                                        #Make sure to change other references to desired image as needed in this file
   dimensions = panoPixelArray.shape
   width = dimensions[1]
-  hieght = dimensions[0]
+  height = dimensions[0]
   # Initialize cozmo camera
   #robot.camera.image_stream_enabled = True
   pixelWeights = [] # predictions
