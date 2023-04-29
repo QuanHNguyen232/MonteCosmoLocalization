@@ -23,6 +23,7 @@ Goal:
 1. [Setup](#setup)
    1. [Computer](#computer-setup)
    1. [Android phone](#mobile-phone-android-setup)
+   1. [Website publishing](#website-publishing)
 1. [Tasks](#tasks)
 1. [Files and Dirs](#files-and-dirs)
 1. [Functionality](#functionality)
@@ -67,13 +68,13 @@ Following the [installation guide from Cozmo](http://cozmosdk.anki.com/docs/init
 
 ### Website Publishing
 1. Generate html file:
-   * In `html-generator.py`, change the `download_dir` into your Chrome's download folder
+   * In `html-generator.py`, change the `download_dir` into your Chrome's download folder.
    * Run the generator:
       ```bash
       python html-generator.py
       ```
 
-1. Upload html file and assets (if any) to /`public_html/` folder on lab machine at Gettysburg College
+1. Upload html file and assets (if any) to `/public_html/` folder on lab machine at Gettysburg College.
    ```bash
    chmod -R 755 ~/public_html/folder_to_publish
    chmod -R 755 .
@@ -205,11 +206,13 @@ Our group's localization also relied on a program to randomly determine a kidnap
 | 4/26: 11:00-12:15PM | Add baseline to train siamese network | Quan |
 | 4/26: 1:30-3:30PM | Add training loop | Quan |
 | 4/27: 4:30-6:30AM | Fine-tuned model on our dataset (success) | Quan |
-
+| 4/28: 7:30-8:30PM | Write doc + clean code + publish website | Quan, Nick |
 
 </details>
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
 
 ---
 
-*Note:* markdown to html conversion using [codebeautify.org](https://codebeautify.org/markdown-to-html)
+*Note:*
+* Markdown to html conversion using [codebeautify.org](https://codebeautify.org/markdown-to-html)
+* Src code (zip) is not available on Github (zipped this project) due to oversize
