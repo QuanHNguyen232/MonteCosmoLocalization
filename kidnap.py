@@ -14,15 +14,12 @@ import cozmo_MCL
 
 def kidnap_problem_solver(robot: cozmo.robot.Robot):
     # Spins the cozmo 360 degrees to get a panorama image of its current environment
-    picColl.take_imgs(robot, num_pic=20, img_dir='cozmo-images-kidnap')
+    picColl.take_imgs(robot, num_pic=30, img_dir='cozmo-images-kidnap')
     # print('imgs collected')
     
     # Turn robot a random amount to simulate a kidnapping & snap picture at new location
     kidnap(robot)
     # print('kidnap')
-    
-    takeSingleImage(robot)
-    # print('take 1 img')
     
     #Use MCL to find original position, takes images an tries to relocate
     cozmo_MCL.MCL(robot)

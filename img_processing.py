@@ -17,9 +17,9 @@ def crop_img(img):
 #to stitch images together in a panaorama & crop it 
 def stitching():
     images = []
-    for i in range(20): #our directory of images has 20 to stich togehter
+    for i in range(29): #our directory of images has 30 to stitch together
         images.append( #replace directory with your own 
-            cv2.imread(f'./cozmo-images-kidnap/{i}-{i*18.0}.jpg'))
+            cv2.imread(f'./cozmo-images-kidnap/{i}-{i*12.0}.jpg'))
     stitcher = cv2.Stitcher.create()
     ret, pano = stitcher.stitch(images)
     #print(pano.shape)
