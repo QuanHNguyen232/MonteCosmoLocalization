@@ -1,8 +1,0 @@
-cozmo[camera]
-Pillow<=9.4.0
-pandas
-numpy
-opencv-python
-matplotlib
-selenium
-webdriver-manager
