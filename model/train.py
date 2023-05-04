@@ -1,18 +1,23 @@
 import os
 import numpy as np
 import pandas as pd
-from utils import util
 from tqdm import tqdm
+from os.path import join as join_path
+from os.path import exists as is_path_exist
 
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
+from torch import optim
+from torch.optim import lr_scheduler
+
 import sys
 sys.path.append('../')
+from utils import util
 from model.model import MyModel
 from dataset.dataset import MyDataset
 
-def train_fn(model: MyModel, dataloader: DataLoader, optimizer: torch.optim, criterion: nn):
+def train_fn(model: MyModel, dataloader: DataLoader, optimizer: optim, criterion: nn):
     model.train()
     total_loss = 0.0
     for batch in tqdm(dataloader):
@@ -37,13 +42,20 @@ def valid_fn(model: MyModel, dataloader: DataLoader, criterion: nn):
         total_loss += loss.item()
     return total_loss / len(dataloader)
 
-def train_loop(model, trainloader, validloader, criterion, optimizer, cfg):
+def train_loop(cfg, model: MyModel,
+                    trainloader: DataLoader,
+                    validloader: DataLoader,
+                    criterion: nn,
+                    optimizer: optim,
+                    scheduler: lr_scheduler=None):
     best_valid_loss = np.Inf
     for i in range(cfg['epochs']):
         train_loss = train_fn(model, trainloader, optimizer, criterion)
         valid_loss = valid_fn(model, validloader, criterion)
+        if scheduler is not None:
+            scheduler.step()
         if valid_loss < best_valid_loss:
-            torch.save(model.state_dict(), f'best_{model.modeltype}.pt')
+            torch.save(model.state_dict(), join_path(cfg['save_model_dir'], f'best_{model.modeltype}.pt'))
             best_valid_loss = valid_loss
             print('SAVED_WEIGHTS success')
         
@@ -52,7 +64,7 @@ def train_loop(model, trainloader, validloader, criterion, optimizer, cfg):
 if __name__ == '__main__':
     cfg = util.load_cfg()
 
-    df = pd.read_csv(os.path.join(cfg['data_dir'], "metadata.csv"))
+    df = pd.read_csv(join_path(cfg['data_dir'], "metadata.csv"))
     
     train_df = df[df['sample_id'] < cfg['split-point']]
     valid_df = df[df['sample_id'] >= cfg['split-point']]
@@ -64,16 +76,16 @@ if __name__ == '__main__':
     validloader = DataLoader(validset, cfg['batch_size'])
     print('dataloader created')
     
-    model = MyModel(modeltype='resnet18', emb_size=cfg['emb_size'])
-    model_weight_path = os.path.join(cfg['save_model_dir'], f'best_{model.modeltype}.pt')
-    if os.path.exists(model_weight_path):
+    model = MyModel(modeltype=cfg['model_type'], emb_size=cfg['emb_size'])
+    model_weight_path = join_path(cfg['save_model_dir'], f'best_{model.modeltype}_056.pt')
+    if is_path_exist(model_weight_path):
         model.load_state_dict(torch.load(model_weight_path))
         print('loaded saved model')
     model.to(cfg['device'])
     print('model created, type=', model.modeltype)
 
     criterion = nn.TripletMarginLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=cfg['LR'])
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=cfg['scheduler_milestones'], gamma=2/3.0)
+    optimizer = optim.Adam(model.parameters(), lr=cfg['LR'])
+    scheduler = lr_scheduler.MultiStepLR(optimizer, milestones=cfg['scheduler_milestones'], gamma=cfg['scheduler_gamma'])
 
-    train_loop(model, trainloader, validloader, criterion, optimizer, cfg)
+    train_loop(cfg, model, trainloader, validloader, criterion, optimizer, scheduler)
