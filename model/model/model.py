@@ -5,7 +5,6 @@ from torchvision.models import vgg16_bn, VGG16_BN_Weights, resnet18, ResNet18_We
 
 import sys
 sys.path.append('../')
-from utils.util import load_cfg
 
 class MyModel(nn.Module):
     def __init__(self, modeltype='resnet18', emb_size=512):
@@ -31,6 +30,7 @@ class MyModel(nn.Module):
         return a, p, n
     
 if __name__ == '__main__':
+    from utils.util import load_cfg
     cfg = load_cfg('../config/configuration.json')
     model = MyModel(emb_size=cfg['emb_size'])
     print(model)

@@ -62,8 +62,11 @@ def train_loop(cfg, model: MyModel,
         print(f'Epoch: {i} \t trainloss: {train_loss} \t validloss: {valid_loss}')
 
 if __name__ == '__main__':
-    cfg = util.load_cfg()
-
+    curr_dir = os.path.dirname(__file__)
+    cfg = util.load_cfg(join_path(curr_dir, 'config/configuration.json'))
+    cfg['data_dir'] = join_path(curr_dir, cfg['data_dir'])
+    cfg['save_model_dir'] = join_path(curr_dir, cfg['save_model_dir'])
+    
     df = pd.read_csv(join_path(cfg['data_dir'], "metadata.csv"))
     
     train_df = df[df['sample_id'] < cfg['split-point']]

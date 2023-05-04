@@ -13,7 +13,6 @@ from torchvision import transforms
 
 import sys
 sys.path.append('../')
-from utils.util import load_cfg
 
 class MyDataset(Dataset):
     def __init__(self, df, cfg):
@@ -38,6 +37,7 @@ class MyDataset(Dataset):
         
         return A_img, P_img, N_img
     
+    @staticmethod
     def get_img(self, img_path: str):
       img = np.asarray(PIL.Image.open(img_path))    # using PIL get imgs faster than opencv
       img = np.stack([img, img, img], axis=-1)
@@ -45,6 +45,8 @@ class MyDataset(Dataset):
       return img
 
 if __name__ == '__main__':
+    from utils.util import load_cfg
+
     cfg = load_cfg('../config/configuration.json')
     # dataset = MyDataset(cfg)
 

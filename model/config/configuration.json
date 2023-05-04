@@ -1,6 +1,6 @@
 {
-  "data_dir": "/Accounts/turing/students/s24/nguyqu03/Desktop/MonteCosmoLocalization/model/data",
-  "save_model_dir": "/Accounts/turing/students/s24/nguyqu03/Desktop/MonteCosmoLocalization/model/saved",
+  "data_dir": "data",
+  "save_model_dir": "saved",
   "split-point": 15,
   "model_type": "resnet18",
   "emb_size": 512,

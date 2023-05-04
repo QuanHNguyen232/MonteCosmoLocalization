@@ -13,7 +13,7 @@ def generate_csv(datadir: str) -> None:
     data = defaultdict(list)
     for dir in os.listdir(DATA_DIR):
         if not os.path.isdir(os.path.join(DATA_DIR, dir)): continue
-        img_id_list = [int(file.split('.')[0]) for file in os.listdir(os.path.join(DATA_DIR, dir)) if file.endswith('jpg')]    # file = 'img_id.jpg'
+        img_id_list = [int(file.split('.')[0]) for file in os.listdir(os.path.join(DATA_DIR, dir)) if (file.endswith('jpg') and file[0].isdigit())]    # file = 'img_id.jpg'
         img_id_list = sorted(img_id_list)
         for img in img_id_list:
             data['sample_id'].append(dir)

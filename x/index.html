@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS 371 MCL CozmoBot</title>
+</head>
+<body><h1 align=center>Anki Cozmo Kidnapping using Monte Carlo Localization</h1>
+
+<p align="center">
+Nicholas Stach, Quan Nguyen, Brayton Alkinburgh, Douglas Harsha
+<br>
+<i>Spring 2023</i>
+<br>
+Src code (<a href="https://github.com/QuanHNguyen232/MonteCosmoLocalization" target="_self">github</a>, <a href="./MonteCosmoLocalization.zip" target="_self">zip</a>)
+<br>
+<p align="center"><img src="readme-assets/cozmo-robot.jpg" width="" height="100"/></p>
+</p>
+
+<p>Goal:</p>
+<ul>
+<li>Implement MCL with Anki Cozmo</li>
+<li>Create Panorama of collected images from which the Cozmo bot can use to find its position and relocate itself.</li>
+<li>Create means of displaying belief probabilities.</li>
+<li>Docs: <a href="https://data.bit-bots.de/cozmo_sdk_doc/cozmosdk.anki.com/docs/api.html">Cozmo API</a></li>
+<li>Helpful <a href="https://github.com/nheidloff/visual-recognition-for-cozmo-with-tensorflow/blob/master/1-take-pictures/take-pictures.py">link</a> for taking pictures with cozmo and saving them.</li>
+</ul>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#setup">Setup</a><ol>
+<li><a href="#computer-setup">Computer</a></li>
+<li><a href="#mobile-phone-android-setup">Android phone</a></li>
+</ol>
+</li>
+<li><a href="#tasks">Tasks</a></li>
+<li><a href="#files-and-dirs">Files and Dirs</a></li>
+<li><a href="#functionality">Functionality</a></li>
+<li><a href="#future-goals">Future Goals</a></li>
+<li><a href="#working-log">Working log</a></li>
+</ol>
+<hr>
+<h2 id="setup">Setup</h2>
+<p>Following the <a href="http://cozmosdk.anki.com/docs/initial.html">installation guide from Cozmo</a></p>
+<h3 id="computer-setup">Computer Setup:</h3>
+<ol>
+<li>Follow the <a href="http://cozmosdk.anki.com/docs/initial.html">Initial setup</a>:<ul>
+<li>Install Anki Cozmo SDK</li>
+<li>SDK Example Programs: download and extract to any directory</li>
+</ul>
+</li>
+<li>Install <a href="http://cozmosdk.anki.com/docs/adb.html#adb">Android Debug Bridge</a>, follow that to <a href="http://cozmosdk.anki.com/docs/adb.html#final-install">Final installation</a>.</li>
+<li>   Setup environment (recommend using Anaconda): Python 3.8 + required packages in requirements.txt:<ul>
+<li>Create environment:<pre><code class="language-bash">conda create -n envname python=3.8
+</code></pre>
+</li>
+<li>Activate environment:<pre><code class="language-bash">conda activate envname
+</code></pre>
+</li>
+<li>Install all required packages:<pre><code class="language-bash">pip install -r requirements.txt
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="mobile-phone-android-setup">Mobile Phone (Android) Setup:</h3>
+<ol>
+<li>   Install official Cozmo app on phone (<a href="https://play.google.com/store/apps/details?id=com.digitaldreamlabs.cozmo2&hl=en_US&gl=US">Android</a>/<a href="https://apps.apple.com/us/app/cozmo/id1154282030">iOS</a>)</li>
+<li>   Enable USB debugging on your device. This step may vary based on your phone, so check the <a href="https://developer.android.com/studio/debug/dev-options">android instruction</a> if needed.</li>
+<li>Those steps are required everytime working on project:
+i.	Connect USB cable from phone to computer<ol>
+<li>Run <code>adb devices</code> on CommandPrompt on computer to check and authorize your phone. (unil it appears &quot;device&quot; instead of &quot;unauthorized&quot;)</li>
+<li>   Open Cozmo app and turn Cozmo bot on </li>
+<li>   Connect to Cozmo bot’s wifi network.</li>
+<li>   Enable SDK on Cozmo app</li>
+</ol>
+</li>
+<li>Download the SDK Examples, open Cozmo app, connect with cozmo bot (ensure the robot does not fall off the desk) -&gt; setting -&gt; enable SDK. Then try running the examples.</li>
+</ol>
+<h3 id="website-publishing">Website Publishing</h3>
+<ol>
+<li><p>Generate html file:</p>
+<ul>
+<li>In <code>html-generator.py</code>, change the <code>download_dir</code> into your Chrome&#39;s download folder</li>
+<li>Run the generator:<pre><code class="language-bash">python html-generator.py
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>Upload html file and assets (if any) to /<code>public_html/</code> folder on lab machine at Gettysburg College</p>
+<pre><code class="language-bash">chmod -R 755 ~/public_html/folder_to_publish
+chmod -R 755 .
+</code></pre>
+</li>
+</ol>
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
+
+<hr>
+<h2 id="tasks">Tasks</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Future:<ul>
+<li>How to improve accuracy</li>
+<li>How to make it works in dark environment (may use edge detection??)</li>
+<li>How to localize with just 4 images (0, 90, 180, 270 degrees) (divide imgs into $n$ cols then compare w/ $n$ cols of each img for all $m$ ims?)</li>
+</ul>
+</li>
+<li><input checked="" disabled="" type="checkbox"> Get robot to turn to location it has highest belief prob after MCL done</li>
+<li><input checked="" disabled="" type="checkbox"> Polish borrowed code: make more succint, use methods we have already coded.  </li>
+<li><input checked="" disabled="" type="checkbox"> Read MCL slides + Java demo code (convert to python) (Bray &amp; Doug)</li>
+<li><input checked="" disabled="" type="checkbox"> Try running MCL w/ pano</li>
+<li><input checked="" disabled="" type="checkbox"> How to rotate robot</li>
+<li><input checked="" disabled="" type="checkbox"> How to get image from cozmo’s camera (file <code>picture-collection.py</code>)</li>
+<li><input checked="" disabled="" type="checkbox"> Fix MCL code for images (check <a href="https://www.youtube.com/watch?v=JhkxtSn9eo8">Youtube</a> and github) (file <code>my-MCL.py</code>)</li>
+<li><input checked="" disabled="" type="checkbox"> Create a panorama (optional)<ul>
+<li>Check openCV Stitching (e.g from prev group: <a href="http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/Stitching.py">L.Attai,R.Fuller,C.Rhodes</a>)</li>
+</ul>
+</li>
+<li><input checked="" disabled="" type="checkbox"> Crop pano img + sensor img in MCL algo (Nick)</li>
+<li><input checked="" disabled="" type="checkbox"> Recreate MCL as per supplied examples (based on <a href="http://cs.gettysburg.edu/~tneller/archive/cs371/cozmo/22sp/fuller/MCLocalize.py">L.Attai,R.Fuller,C.Rhodes</a>))</li>
+</ul>
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
+
+<hr>
+<h2 id="files-and-dirs">Files and Dirs</h2>
+<ul>
+<li><code>/data/</code>: data directory collected from MCL, used to create histogram.</li>
+<li><code>/cozmo-images-kidnap/</code>: images for kidnap problem (collected data that is updated for each run)</li>
+<li><code>/cozmo-imgs-data1/</code>: data for remote work</li>
+<li><code>/cozmo_sdk_examples_1.4.10/</code>: <a href="http://cozmosdk.anki.com/docs/downloads.html">SDK Examples code</a> for Cozmo bot.</li>
+<li><code>/model/</code>: dir for training neural network model<ul>
+<li><code>/data/</code>: dataset of 1440 gray-scaled imgs collected in Glat112 and Glat207 (72 imgs/360 degrees).</li>
+</ul>
+</li>
+<li><code>cozmo_MCL.py</code>: New MCL implementation, based on previous group&#39;s work</li>
+<li><code>img_processing.py</code>: functiona to get imgs, process imgs, save imgs</li>
+<li><code>pic_collection.py</code>: functions to collect pictures for pano, taking a single image for MCL.</li>
+<li><code>Histogram.py</code>: Creation of Histogram to display localization beliefs before and after MCL</li>
+<li><code>kidnap.py</code>: Running of kidnapped robot problem, using MCL, image processing, and pic collection.</li>
+<li><code>MCL_old.py</code>: old MCL (not true MCL -&gt; not accurate)</li>
+<li><code>requirements.txt</code>: has all required installs for use with our code and Cozmo</li>
+<li><code>hist.png</code>: histogram of collected belief probablities after MCL is run</li>
+<li><code>Sliced.jpg</code>: picture file used during MCL to compare current location to pano</li>
+<li><code>html-generator.py</code>: convert <code>md</code> to <code>html</code> file using <a href="https://codebeautify.org/markdown-to-html">codebeautify.org</a>.</li>
+</ul>
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
+
+<hr>
+<h2 id="functionality">Functionality</h2>
+<p>Our Cozmo MCL was able to localize with reasonable accuracy in some environments (in cases where the Stitching works well). Locations with repetative patterns or extreme amounts of light greatly reduced accuracy of the localization. </p>
+<p>Our group was able to improve upon a past group&#39;s MCL and make it give Cozmo a command to turn to home accordingly toward from its most believed location. Our group also created a histogram with clustered probablities and implemented the highest belief into the MCL to serve as the location to turn to.</p>
+<h3 id="results">Results</h3>
+<p>Building off of the work of Leah Attai, Casey Rhodes, and Rachel Fuller, as well as examples provided by Mohammad Altaleb, we were able to construct a Monte Carlo Localization System that successfully localized the Anki Cozmo robot in some environments. Our system centered around a set of 30 photos taken 12 degrees apart to form a panorama. The panorama mapped the 360 degree area around the robot prior to its &quot;kidnapping.&quot; By rotating the robot an arbitrary number of degrees, we then &quot;kidnapped&quot; the robot. The robot would then take a single picture, and we performed a set of pixel-matching operations to determine which section of the panorama most likely corresponded with the robot&#39;s kidnapped heading. We would repeat this process ten times, rotating the robot slighty each time to collect varied data and increase the accuracy of our final identification. Thus having localized, we turned the robot to turn towards its initial &quot;home&quot; position, represented as the starting point of the panorama, reversing the kidnapping.</p>
+<p>Our system&#39;s performance was generally dependent upon the success of two functions. Firstly, in order to create the panorama it was necessary to stitch together the 30 initial photos. Our stitching function, based on an example from OpenCV, struggled in certain environments that reduced the distinctions between certain photos. Too much or too little light, or a lack of identifiable landmarks would stymie the algorithm, and thus produce a low-confidence panorama that induced difficulties in our localization attempts. Secondly, out pixel-matching comparison algorithm would struggle from much the same issues, running into situations were a large area of the panorama (such as a white wall) appeared as candidates for localizations. This issue was likely the cause of several failed tests where the Cozmo robot localized close but not exactly to its home position, within 20 degrees or so.</p>
+<p>The following table shows examples of test images taken in sequence that were and were not conducive to panorama-based localization. The top two, taken in the CS Lounge, are visually distinct with enough &quot;landmarks&quot; such as the striped couch, trash can, person, and chair to allow our algorithm to successfully localize. The bottom two, taken next to the CS Lounge printer, are too similar for the algorithm to extract any meaningful data -- localizations in this area appeared to be little more than guesses.</p>
+<table align="center"> 
+      <tr>
+        <td><img src="readme-assets/62.jpg"></td>
+        <td><img src="readme-assets/63.jpg"></td>
+      </tr>
+      <tr>
+        <td><img src="readme-assets/25.jpg"></td>
+        <td><img src="readme-assets/26.jpg"></td>
+      </tr>
+   </table>
+
+<p>This Histogram shows the results of one test of our localization system. The X-Axis is the width of the panorama corresponding to the 360 degree area in pixels, the Y-Axis the total probabilistic likelihood that the Cozmo is facing that area of the panorama. Blue lines represent the Cozmo&#39;s confidence in its location before localization, orange represents its confidence after localization. The point with the highest probability, here just after pixel 1400, was selected as the kidnapped location.</p>
+<p align="center">
+<img src="readme-assets/hist.png" width="" height="400"/>
+</p>
+
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
+
+<hr>
+<h2 id="future-goals">Future Goals</h2>
+<p>The stitching algorithm used in this project would sometimes struggle with environments with few landmarks or excess/lack of light, thus not stitching all images together (issue from OpenCV). This would create a panorama that was not a true 360 degree view. Future groups could attempt a different stitching algorithm or attempt to build a world map in a different way. Our group recommendation is to avoid the use of a panorama (stitched from images) all together, as it proved too brittle for varied environments and was never as accurate as we had wanted. Other groups in this semester reported similar negative findings on the use of a panorama as well.</p>
+<p>Future groups could also rework our MCL to where Cozmo does not stop localizing until a certain belief probability/number of predictions for a location is reached. Our current implementation only rotates 10 times to localize before committing to the final belief probabilities.</p>
+<p>Our group&#39;s localization also relied on a program to randomly determine a kidnap location and then would automatically run MCL to localize. Future groups could have Cozmo map it&#39;s environment, then be in a state where it tries localize if it believes it is not at &quot;home.&quot;</p>
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
+
+<hr>
+<h2 id="working-log">Working log</h2>
+<details>
+<summary>Click to expand</summary>
+
+<table>
+<thead>
+<tr>
+<th align="left">Data/Time</th>
+<th align="left">Activity</th>
+<th align="right">Member</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">3/17: 1-2pm</td>
+<td align="left">Setup Project</td>
+<td align="right">Brayton &amp; Nick</td>
+</tr>
+<tr>
+<td align="left">3/23: 4:15-5:15pm</td>
+<td align="left">Setup Project &amp; Doc of steps</td>
+<td align="right">Doug &amp; Nick</td>
+</tr>
+<tr>
+<td align="left">3/24: 1-5pm</td>
+<td align="left">Connect to Cozmo, implement basic MCL &amp; pic collection</td>
+<td align="right">Doug, Quan &amp; Nick</td>
+</tr>
+<tr>
+<td align="left">3/29: 2-5pm</td>
+<td align="left">MCL, refine code for pic collection</td>
+<td align="right">Doug, Quan &amp; Nick</td>
+</tr>
+<tr>
+<td align="left">3/31: 2-4:45pm</td>
+<td align="left">Done take1Pic, kidnap</td>
+<td align="right">Doug, Quan &amp; Nick</td>
+</tr>
+<tr>
+<td align="left">3/31: 5:15-6:30pm</td>
+<td align="left">Modify and fix bug in MCL</td>
+<td align="right">Quan</td>
+</tr>
+<tr>
+<td align="left">4/1: 1-1:50am</td>
+<td align="left">Add MSE+Cos_Similar, try MCL, bad result --&gt; suggest creating pano</td>
+<td align="right">Quan</td>
+</tr>
+<tr>
+<td align="left">4/5: 3:30-5:30pm</td>
+<td align="left">Image stiching for creation of pano</td>
+<td align="right">Quan &amp; Nick</td>
+</tr>
+<tr>
+<td align="left">4/7: 1:20-3:30pm</td>
+<td align="left">Image cropping, MCL redo</td>
+<td align="right">Nick, Quan, Brayton</td>
+</tr>
+<tr>
+<td align="left">4/7: 3:30-4:30 pm</td>
+<td align="left">MCL redo</td>
+<td align="right">Nick, Quan</td>
+</tr>
+<tr>
+<td align="left">4/12: 2:20-4:50pm</td>
+<td align="left">Working on new MCL based on previous group efforts</td>
+<td align="right">Nick</td>
+</tr>
+<tr>
+<td align="left">4/12: 7:00-7:50pm</td>
+<td align="left">MCL debugging</td>
+<td align="right">Nick</td>
+</tr>
+<tr>
+<td align="left">4/14: 1:00-2:30PM</td>
+<td align="left">MCL testing/debugging</td>
+<td align="right">Brayton</td>
+</tr>
+<tr>
+<td align="left">4/14: 1:00-5:20PM</td>
+<td align="left">MCL testing/debugging</td>
+<td align="right">Nick</td>
+</tr>
+<tr>
+<td align="left">4/16: 9:20-10:00PM</td>
+<td align="left">Make Cozmo relocalize after MCL</td>
+<td align="right">Nick</td>
+</tr>
+<tr>
+<td align="left">4/16: 2:00-4:30PM</td>
+<td align="left">Make Cozmo relocalize after MCL</td>
+<td align="right">Nick</td>
+</tr>
+<tr>
+<td align="left">4/21: 1:00-2:30PM</td>
+<td align="left">Cozmo localization tuning, website with documentation</td>
+<td align="right">Nick, Doug, Brayton</td>
+</tr>
+<tr>
+<td align="left">4/21: 2:30-5:40PM</td>
+<td align="left">Cozmo localization tuning, bins for histogram</td>
+<td align="right">Nick</td>
+</tr>
+<tr>
+<td align="left">4/21: 5:00-7:00PM</td>
+<td align="left">Modifying pic collection</td>
+<td align="right">Brayton</td>
+</tr>
+<tr>
+<td align="left">4/22: 8:00-9:00PM</td>
+<td align="left">Modified kidnap</td>
+<td align="right">Brayton</td>
+</tr>
+<tr>
+<td align="left">4/23: 7:00-10:00PM</td>
+<td align="left">Modified MCL to use new map system</td>
+<td align="right">Brayton</td>
+</tr>
+<tr>
+<td align="left">4/24: 9:30-10:30AM</td>
+<td align="left">Changing MCL and supplementary files</td>
+<td align="right">Brayton</td>
+</tr>
+<tr>
+<td align="left">4/24: 1:00-2:00PM</td>
+<td align="left">Documentation and archiving of work</td>
+<td align="right">Nick, Quan, Brayton</td>
+</tr>
+<tr>
+<td align="left">4/24: 10:00-12:00PM</td>
+<td align="left">Write website framework, outline, review final code</td>
+<td align="right">Doug</td>
+</tr>
+<tr>
+<td align="left">4/25: 5:15-8:30PM</td>
+<td align="left">Clean code, add html-generator, create dataset (1440 imgs)</td>
+<td align="right">Quan</td>
+</tr>
+<tr>
+<td align="left">4/25: 7:00-12:00AM</td>
+<td align="left">Implement sentence_transformers, found unuseful with pretrained (clip-ViT-B-32)</td>
+<td align="right">Brayton</td>
+</tr>
+<tr>
+<td align="left">4/26: 10:00-3:00AM</td>
+<td align="left">Populate website, write copy, finalize website objects and sections</td>
+<td align="right">Doug</td>
+</tr>
+<tr>
+<td align="left">4/26: 11:00-12:15PM</td>
+<td align="left">Add baseline to train siamese network</td>
+<td align="right">Quan</td>
+</tr>
+<tr>
+<td align="left">4/26: 1:30-3:30PM</td>
+<td align="left">Add training loop</td>
+<td align="right">Quan</td>
+</tr>
+<tr>
+<td align="left">4/27: 4:30-6:30AM</td>
+<td align="left">Fine-tuned model on our dataset (success)</td>
+<td align="right">Quan</td>
+</tr>
+</tbody></table>
+</details>
+<p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>
+
+<hr>
+<p><em>Note:</em> markdown to html conversion using <a href="https://codebeautify.org/markdown-to-html">codebeautify.org</a></p>
+</body>
+</html>
