@@ -5,7 +5,7 @@ Nicholas Stach, Quan Nguyen, Brayton Alkinburgh, Douglas Harsha
 <br>
 <i>Spring 2023</i>
 <br>
-Src code (<a href="https://github.com/QuanHNguyen232/MonteCosmoLocalization" target="_self">github</a>, <a href="./MonteCosmoLocalization.zip" target="_self">zip</a>)
+Src code (<a href="https://github.com/QuanHNguyen232/MonteCosmoLocalization" target="_self">github (all code)</a>, <a href="./MonteCosmoLocalization.zip" target="_self">zip (finished code)</a>)
 <br>
 <p align="center"><img src="readme-assets/cozmo-robot.jpg" width="" height="100"/></p>
 </p>
@@ -133,7 +133,7 @@ Our group was able to improve upon a past group's MCL and make it give Cozmo a c
 ### Results
 Building off of the work of Leah Attai, Casey Rhodes, and Rachel Fuller, as well as examples provided by Mohammad Altaleb, we were able to construct a Monte Carlo Localization System that successfully localized the Anki Cozmo robot in some environments. Our system centered around a set of 30 photos taken 12 degrees apart to form a panorama. The panorama mapped the 360 degree area around the robot prior to its "kidnapping." By rotating the robot an arbitrary number of degrees, we then "kidnapped" the robot. The robot would then take a single picture, and we performed a set of pixel-matching operations to determine which section of the panorama most likely corresponded with the robot's kidnapped heading. We would repeat this process ten times, rotating the robot slighty each time to collect varied data and increase the accuracy of our final identification. Thus having localized, we turned the robot to turn towards its initial "home" position, represented as the starting point of the panorama, reversing the kidnapping.
 
-Our system's performance was generally dependent upon the success of two functions. Firstly, in order to create the panorama it was necessary to stitch together the 30 initial photos. Our stitching function, based on an example from OpenCV, struggled in certain environments that reduced the distinctions between certain photos. Too much or too little light, or a lack of identifiable landmarks would stymie the algorithm, and thus produce a low-confidence panorama that induced difficulties in our localization attempts. Secondly, out pixel-matching comparison algorithm would struggle from much the same issues, running into situations were a large area of the panorama (such as a white wall) appeared as candidates for localizations. This issue was likely the cause of several failed tests where the Cozmo robot localized close but not exactly to its home position, within 20 degrees or so.
+Our system's performance was generally dependent upon the success of two functions. Firstly, in order to create the panorama it was necessary to stitch together the 30 initial photos. However, stitching together 29 out of the 30 images appeared to better created a pano and hang up less on the stitching algorithm during testing. Our stitching function, based on an example from OpenCV, struggled in certain environments that reduced the distinctions between certain photos. Too much or too little light, or a lack of identifiable landmarks would stymie the algorithm, and thus produce a low-confidence panorama that induced difficulties in our localization attempts. Secondly, out pixel-matching comparison algorithm would struggle from much the same issues, running into situations were a large area of the panorama (such as a white wall) appeared as candidates for localizations. This issue was likely the cause of several failed tests where the Cozmo robot localized close but not exactly to its home position, within 20 degrees or so.
 
 The following table shows examples of test images taken in sequence that were and were not conducive to panorama-based localization. The top two, taken in the CS Lounge, are visually distinct with enough "landmarks" such as the striped couch, trash can, person, and chair to allow our algorithm to successfully localize. The bottom two, taken next to the CS Lounge printer, are too similar for the algorithm to extract any meaningful data -- localizations in this area appeared to be little more than guesses.
 
@@ -159,7 +159,7 @@ This Histogram shows the results of one test of our localization system. The X-A
 ---
 
 ## Future Goals
-The stitching algorithm used in this project would sometimes struggle with environments with few landmarks or excess/lack of light, thus not stitching all images together (issue from OpenCV). This would create a panorama that was not a true 360 degree view. Future groups could attempt a different stitching algorithm or attempt to build a world map in a different way. Our group recommendation is to avoid the use of a panorama (stitched from images) all together, as it proved too brittle for varied environments and was never as accurate as we had wanted. Other groups in this semester reported similar negative findings on the use of a panorama as well.
+The stitching algorithm used in this project would sometimes struggle with environments with few landmarks or excess/lack of light, thus not stitching all images together (issue from OpenCV). This would create a panorama that was not a true 360 degree view. Future groups could attempt a different stitching algorithm or attempt to build a world map in a different way. Our group recommendation is to avoid the use of a panorama (stitched from images) all together, as it proved too brittle for varied environments and was never as accurate as we had wanted. Stitching also tended to take a long time to stitch a panorama from images (30+ seconds), if it was able at all. Other groups in this semester reported similar negative findings on the use of a panorama as well.
 
 Future groups could also rework our MCL to where Cozmo does not stop localizing until a certain belief probability/number of predictions for a location is reached. Our current implementation only rotates 10 times to localize before committing to the final belief probabilities.
 
@@ -205,6 +205,7 @@ Our group's localization also relied on a program to randomly determine a kidnap
 | 4/26: 11:00-12:15PM | Add baseline to train siamese network | Quan |
 | 4/26: 1:30-3:30PM | Add training loop | Quan |
 | 4/27: 4:30-6:30AM | Fine-tuned model on our dataset (success) | Quan |
+| 5/4: 2:30-6PM  | Debugging, creating separate branch for finished work in Github | Nick |
 
 </details>
 <p align="right"><a href="#anki-cozmo-kidnapping-using-monte-carlo-localization">[Back to top]</a></p>

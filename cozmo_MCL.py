@@ -16,7 +16,7 @@ import math
 import statistics as stat
 import kidnap
 import img_processing as imgPr
-import histogram
+import Histogram
 
 # Arbitrary values, to model gaussian noise.
 sensorVariance = 0.01
@@ -112,7 +112,7 @@ def MCL(robot: cozmo.robot.Robot):
   
   #important: bin portions of data to find were most predictions are 'clumped,' then can take 
   #this bin and set as most believed location
-  mostBelievedLoc = histogram.makeHistogram()   # get max bin for 'newParticles' histogram, this is most frequent belief predication after MCL of a pixel range 10
+  mostBelievedLoc = Histogram.makeHistogram()   # get max bin for 'newParticles' histogram, this is most frequent belief predication after MCL of a pixel range 10
                                                 # (where Cozmo thinks it is after MCL)
   #get width of panorama, our 'map' of the environment
   '''

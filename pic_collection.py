@@ -50,7 +50,7 @@ def take_imgs(robot: cozmo.robot.Robot, num_pic=15, img_dir=IMG_DIR, is_stitch=T
             img = ImageOps.grayscale(converted)
             img = np.array(img)
 
-            imgPr.save_img(img, os.path.join(img_dir, f'{i}.jpg'))
+            imgPr.save_img(img, os.path.join(img_dir, f'{i}-{i*12.0}.jpg'))
             
             robot.turn_in_place(degrees(rotateAngle), speed=degrees(45)).wait_for_completed()
             currAngle += rotateAngle
