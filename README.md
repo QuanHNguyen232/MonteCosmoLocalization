@@ -95,19 +95,19 @@ Following the [installation guide from Cozmo](http://cozmosdk.anki.com/docs/init
 In our code, there are comments that refer to table, etc. Those refer to the algorithms from the "[Probabilistic Robotics](http://robots.stanford.edu/probabilistic-robotics/)" by Sebastian Thrun, Wolfram Burgard and Dieter Fox.
 
 * <details><summary>Pseudo code for MCL</summary>
-   <p align="center"><img src="readme-assets/mcl-algo.png" width="" height="250"/></p>
+   <p align="center"><img src="readme-assets/mcl-algo.png" width="" height="400"/></p>
 </details>
 
 * <details><summary>Table 5.2</summary>
-   <p align="center"><img src="readme-assets/mcl-table-5_2.png" width="" height="250"/></p>
+   <p align="center"><img src="readme-assets/mcl-table-5_2.png" width="" height="350"/></p>
 </details>
 
 * <details><summary>Table 5.4</summary>
-   <p align="center"><img src="readme-assets/mcl-table-5_4.png" width="" height="250"/></p>
+   <p align="center"><img src="readme-assets/mcl-table-5_4.png" width="" height="350"/></p>
 
    The formula above, however, is a bit different from the one from Prof. Neller's lecture:
 
-   <p align="center"><img src="readme-assets/mcl-table-5_4-prof-neller.png" width="" height="250"/></p>
+   <p align="center"><img src="readme-assets/mcl-table-5_4-prof-neller.png" width="" height="350"/></p>
 </details>
 
 
