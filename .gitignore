@@ -177,5 +177,5 @@ pyrightconfig.json
 
 # Quan added
 *.pyc
-*token
+*token*
 *.zip

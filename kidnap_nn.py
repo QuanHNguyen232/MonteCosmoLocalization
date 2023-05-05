@@ -7,7 +7,7 @@ import numpy as np
 from PIL import Image, ImageOps
 import cv2
 import cozmo_MCL
-import cozmo_MCL_neuralnet as mcl_nn
+import cozmo_MCL_nn as mcl_nn
 
 import util
 import util_robot as util_r
@@ -16,7 +16,7 @@ IMG_DIR = 'cozmo-images-kidnap'
 
 def kidnap_problem_solver(robot: cozmo.robot.Robot):
     # Spins the cozmo 360 degrees to get a panorama image of its current environment
-    util_r.take_imgs(robot, num_pic=15, img_dir=IMG_DIR)
+    util_r.take_imgs(robot, num_pic=15, img_dir=IMG_DIR, is_stitch=False)
     
     # Turn robot a random amount to simulate a kidnapping & snap picture at new location
     util_r.random_rotate(robot)

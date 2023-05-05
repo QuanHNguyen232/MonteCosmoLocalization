@@ -1,9 +1,9 @@
 import os
 import cv2
+import random
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import random
 import PIL
 from PIL import Image, ImageOps
 
@@ -23,6 +23,9 @@ def random_rotate(robot: cozmo.robot.Robot):
 def rotate_robot(robot: cozmo.robot.Robot, angle:float, dir:str='left'):
     dir_val = 1 if dir=='left' else -1
     robot.turn_in_place(degrees(angle * dir_val), speed=degrees(45)).wait_for_completed()
+
+def speak_robot(robot: cozmo.robot.Robot, msg):
+    robot.say_text(msg).wait_for_completed()
 
 def get_in_position(robot: cozmo.robot.Robot):
     robot.set_lift_height(0).wait_for_completed()

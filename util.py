@@ -77,7 +77,7 @@ def get_img_rgb(filename: str) -> np.ndarray:
 
 def save_img(img, filepath: str) -> None:
     '''
-    img: np.ndarray or PIL.Image.Image
+    img: np.ndarray
     '''
     # img = img_np2PIL(img)
     # img.save(filepath)

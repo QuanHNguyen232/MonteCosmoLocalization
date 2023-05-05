@@ -68,4 +68,7 @@ def write_html(inname, outname):
     print('Done writing html:5 file')
 
 if __name__ == '__main__':
-    convert_md2html(download_dir='C:/Users/Nicholas/Downloads')#'/Accounts/turing/students/s24/nguyqu03/Downloads'
+    download_dir = input('Your local Download folder: ')
+    md_filename = 'README.md'
+    convert_md2html(download_dir=download_dir,
+                    md_filename=md_filename)
