@@ -307,5 +307,5 @@ In our code, there are comments that refer to table, etc. Those refer to the alg
 
 
 <footer>
-  <p id="footnote-zipfile">[1] Rickroll!!! Src code (zip) is only available on Gettysburg College server (<a href="./MonteCosmoLocalization.zip">download</a>).<a href="#footnote-zipfile-ref">&#8629;</a></p>
+  <p id="footnote-zipfile"><a href="#footnote-zipfile-ref">[1]</a> Src code (zip) is only available on Gettysburg College server (<a href="http://cs.gettysburg.edu/~nguyqu03/cs371/MonteCosmoLocalization.zip">download</a>) (last update: 5/6/2023).</p>
 </footer>
